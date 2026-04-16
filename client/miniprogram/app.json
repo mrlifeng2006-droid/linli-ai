@@ -1,0 +1,63 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/login/login",
+    "pages/register/register",
+    "pages/generate/generate",
+    "pages/result/result",
+    "pages/merchant/merchant",
+    "pages/marketing/marketing",
+    "pages/distribution/distribution",
+    "pages/user/user",
+    "pages/admin/admin"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#FF6B00",
+    "navigationBarTitleText": "邻里AI",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5F5F5",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#FF6B00",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "static/tab-home.png",
+        "selectedIconPath": "static/tab-home-active.png"
+      },
+      {
+        "pagePath": "pages/generate/generate",
+        "text": "AI生成",
+        "iconPath": "static/tab-ai.png",
+        "selectedIconPath": "static/tab-ai-active.png"
+      },
+      {
+        "pagePath": "pages/marketing/marketing",
+        "text": "营销",
+        "iconPath": "static/tab-marketing.png",
+        "selectedIconPath": "static/tab-marketing-active.png"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "我的",
+        "iconPath": "static/tab-user.png",
+        "selectedIconPath": "static/tab-user-active.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于商家GEO定位"
+    }
+  },
+  "requiredBackgroundModes": ["audio", "video"],
+  "networkTimeout": {
+    "request": 30000,
+    "downloadFile": 60000
+  }
+}

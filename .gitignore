@@ -1,0 +1,36 @@
+# 依赖
+node_modules/
+
+# 编译产物
+dist/
+*.js.map
+
+# 环境配置（包含密钥）
+.env
+.env.local
+.env.*.local
+
+# 日志
+*.log
+npm-debug.log*
+
+# 微信小程序
+.miniprogram/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 上传的素材
+uploads/
+temp/
+*.tmp
+
+# COS临时文件
+cos_temp/

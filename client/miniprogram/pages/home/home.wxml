@@ -1,0 +1,60 @@
+<!-- 邻里AI V17.0 - 首页 -->
+<view class="container">
+  <!-- 顶部搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrap">
+      <text class="iconfont icon-search"></text>
+      <input class="search-input" placeholder="搜索商家、服务" disabled bindtap="onSearchTap" />
+    </view>
+    <view class="location-wrap" bindtap="onLocationTap">
+      <text class="iconfont icon-location"></text>
+      <text class="location-text">{{location}}</text>
+    </view>
+  </view>
+
+  <!-- 轮播广告 -->
+  <swiper class="banner-swiper" indicator-dots autoplay circular interval="3000">
+    <swiper-item wx:for="{{banners}}" wx:key="id">
+      <image class="banner-img" src="{{item.imageUrl}}" mode="aspectFill" />
+    </swiper-item>
+  </swiper>
+
+  <!-- 功能入口 -->
+  <view class="entry-grid">
+    <view class="entry-item" wx:for="{{entries}}" wx:key="id" bindtap="onEntryTap" data-id="{{item.id}}">
+      <view class="entry-icon" style="background:{{item.bgColor}}">
+        <text>{{item.icon}}</text>
+      </view>
+      <text class="entry-name">{{item.name}}</text>
+    </view>
+  </view>
+
+  <!-- 商家推荐 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">附近商家</text>
+      <text class="section-more" bindtap="onMoreMerchant">更多 ></text>
+    </view>
+    <view class="merchant-list">
+      <view class="merchant-card" wx:for="{{merchants}}" wx:key="id" bindtap="onMerchantTap" data-id="{{item.id}}">
+        <image class="merchant-cover" src="{{item.cover}}" mode="aspectFill" />
+        <view class="merchant-info">
+          <text class="merchant-name">{{item.name}}</text>
+          <text class="merchant-desc">{{item.description}}</text>
+          <view class="merchant-tags">
+            <text class="tag" wx:for="{{item.tags}}" wx:key="*this">{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- AI生成快捷入口 -->
+  <view class="ai-banner" bindtap="onGenerateTap">
+    <view class="ai-content">
+      <text class="ai-title">AI智能生成</text>
+      <text class="ai-desc">输入店铺描述，AI一键生成营销视频</text>
+    </view>
+    <view class="ai-btn">立即体验</view>
+  </view>
+</view>
