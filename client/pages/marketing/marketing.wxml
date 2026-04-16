@@ -94,4 +94,43 @@
       <text>💡 开启GEO注入后，内容将在附近3公里用户中优先展示</text>
     </view>
   </view>
+
+  <!-- 底部浮动创建按钮 -->
+  <view class="float-btn" bindtap="showCreate">+ 创建活动</view>
+
+  <!-- 创建活动弹窗 -->
+  <view class="modal-mask {{showCreateModal ? 'show' : ''}}" bindtap="closeCreate"></view>
+  <view class="modal-box {{showCreateModal ? 'show' : ''}}">
+    <view class="modal-title">创建营销活动</view>
+    <view class="modal-form">
+      <view class="modal-item">
+        <text class="modal-label">活动名称</text>
+        <input class="modal-input" placeholder="如：夏日清凉大促" data-field="name" bindinput="onFormChange" value="{{activityForm.name}}" />
+      </view>
+      <view class="modal-item">
+        <text class="modal-label">活动类型</text>
+        <picker mode="selector" range="{{activityTypes}}" range-key="name" bindchange="onTypeChange">
+          <view class="modal-picker">
+            <text>{{activityTypes[0].name}}</text>
+            <text class="arrow">›</text>
+          </view>
+        </picker>
+      </view>
+      <view class="modal-item">
+        <text class="modal-label">优惠力度</text>
+        <view class="modal-input-row">
+          <input class="modal-input flex1" type="digit" placeholder="如：30" data-field="discount" bindinput="onFormChange" value="{{activityForm.discount}}" />
+          <text class="input-suffix">% 折扣</text>
+        </view>
+      </view>
+      <view class="modal-item">
+        <text class="modal-label">库存数量</text>
+        <input class="modal-input" type="number" placeholder="如：100" data-field="stock" bindinput="onFormChange" value="{{activityForm.stock}}" />
+      </view>
+    </view>
+    <view class="modal-btns">
+      <view class="modal-cancel" bindtap="closeCreate">取消</view>
+      <view class="modal-confirm" bindtap="onCreateActivity">创建</view>
+    </view>
+  </view>
 </view>
