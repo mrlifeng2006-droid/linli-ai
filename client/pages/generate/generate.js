@@ -99,13 +99,17 @@ Page({
 
     this.setData({ generating: true });
     try {
+      // 前端类型名 → 后端类型名
+      const typeMap = { social: 'friend_circle', shortVideo: 'short_video', video: 'video', image: 'image' };
+      const types = this.data.checkedTypes.map(t => typeMap[t] || t);
+
       const res = await api.ai.generate({
         shopName: this.data.shopName,
         industry: this.data.industry || '其他',
         address: this.data.address,
         features: this.data.features,
         target: this.data.target,
-        types: this.data.checkedTypes,
+        types,
         style: this.data.selectedStyle,
       });
 
