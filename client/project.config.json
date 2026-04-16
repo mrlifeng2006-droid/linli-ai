@@ -1,5 +1,5 @@
 {
-  "miniprogramRoot": "./miniprogram/",
+  "miniprogramRoot": "./",
   "projectname": "邻里AI",
   "description": "邻里AI V17.0 微信小程序",
   "appid": "wxdde6adb1a2f31e1c",

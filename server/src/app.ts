@@ -1,6 +1,7 @@
 /**
  * 邻里AI V17.0 后端服务入口
  */
+// @ts-ignore
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import cors from '@koa/cors';
@@ -11,33 +12,22 @@ import router from './api/routes';
 const app = new Koa();
 
 // 中间件
-app.use(cors({
-  origin: '*',
-  credentials: true,
-}));
+app.use(cors({ origin: '*', credentials: true }));
 
-app.use(bodyParser({
-  jsonLimit: '10mb',
-  formLimit: '10mb',
-}));
+app.use(bodyParser({ jsonLimit: '10mb', formLimit: '10mb' }));
 
 // 统一响应格式
 app.use(async (ctx, next) => {
   try {
     await next();
-    if (!ctx.body) {
-      ctx.body = { code: 404, message: 'Not Found' };
-    }
+    if (!ctx.body) ctx.body = { code: 404, message: 'Not Found' };
   } catch (err: any) {
     ctx.status = err.status || 500;
     ctx.body = {
       code: ctx.status,
       message: err.message || 'Internal Server Error',
-      ...(config.nodeEnv === 'development' && { stack: err.stack }),
     };
-    if (config.nodeEnv !== 'production') {
-      console.error('❌ 错误:', err);
-    }
+    if (config.isDev) console.error('❌ 错误:', err.message);
   }
 });
 
@@ -47,19 +37,23 @@ app.use(router.allowedMethods());
 
 // 启动服务器
 async function bootstrap() {
-  // 测试数据库连接（阶段2会用到）
-  // const { testConnection } = await import('./core/database');
-  // await testConnection();
+  // 动态导入数据库模块（CommonJS）
+  // @ts-ignore
+  const { testConnection, initTables } = require('./core/database');
+
+  const dbOk = testConnection();
+  if (dbOk) initTables();
 
   app.listen(config.port, () => {
     console.log(`
-╔══════════════════════════════════════╗
-║   邻里AI V17.0 后端服务启动成功      ║
-╠══════════════════════════════════════╣
-║   端口: ${config.port}
-║   环境: ${config.nodeEnv}
-║   时间: ${new Date().toLocaleString('zh-CN')}
-╚══════════════════════════════════════╝
+╔══════════════════════════════════════════════╗
+║        邻里AI V17.0 后端服务启动成功          ║
+╠══════════════════════════════════════════════╣
+║   端口:  http://localhost:${config.port}
+║   环境:  ${config.nodeEnv}
+║   数据库: SQLite (开发模式)
+║   时间:  ${new Date().toLocaleString('zh-CN')}
+╚══════════════════════════════════════════════╝
     `);
   });
 }

@@ -1,6 +1,6 @@
 /**
  * 路由总览
- * 阶段1：只注册基础路由占位，阶段2开始填充具体实现
+ * 使用 koa-router v12 API
  */
 import Router from 'koa-router';
 import userRouter from './user';
@@ -30,20 +30,20 @@ router.get('/health', (ctx) => {
   };
 });
 
-// API版本前缀
-const API_PREFIX = '/api/v1';
+// API 版本前缀
+const API = '/api/v1';
 
-// 注册子路由
-router.use(API_PREFIX, healthRouter);
-router.use(API_PREFIX, userRouter);
-router.use(API_PREFIX, merchantRouter);
-router.use(API_PREFIX, contentRouter);
-router.use(API_PREFIX, aiRouter);
-router.use(API_PREFIX, marketingRouter);
-router.use(API_PREFIX, paymentRouter);
-router.use(API_PREFIX, geoRouter);
-router.use(API_PREFIX, videoRouter);
-router.use(API_PREFIX, distributionRouter);
-router.use(API_PREFIX, adminRouter);
+// 子路由：注册到 /api/v1 前缀下
+router.use(API, healthRouter.routes(), healthRouter.allowedMethods());
+router.use(API, userRouter.routes(), userRouter.allowedMethods());
+router.use(API, merchantRouter.routes(), merchantRouter.allowedMethods());
+router.use(API, contentRouter.routes(), contentRouter.allowedMethods());
+router.use(API, aiRouter.routes(), aiRouter.allowedMethods());
+router.use(API, marketingRouter.routes(), marketingRouter.allowedMethods());
+router.use(API, paymentRouter.routes(), paymentRouter.allowedMethods());
+router.use(API, geoRouter.routes(), geoRouter.allowedMethods());
+router.use(API, videoRouter.routes(), videoRouter.allowedMethods());
+router.use(API, distributionRouter.routes(), distributionRouter.allowedMethods());
+router.use(API, adminRouter.routes(), adminRouter.allowedMethods());
 
 export default router;

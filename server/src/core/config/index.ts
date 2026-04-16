@@ -8,13 +8,18 @@ import path from 'path';
 // 加载 .env 文件
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
+// 检测环境：是否使用MySQL（生产模式）
+const USE_MYSQL = process.env.DB_TYPE !== 'sqlite' && process.env.DB_PASSWORD;
+
 export const config = {
   // 服务器
   port: parseInt(process.env.PORT || '3000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
+  isDev: process.env.NODE_ENV !== 'production',
 
   // 数据库
   db: {
+    // MySQL 配置（生产环境）
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '3306', 10),
     name: process.env.DB_NAME || 'linli_ai',
@@ -22,14 +27,17 @@ export const config = {
     password: process.env.DB_PASSWORD || '',
     charset: 'utf8mb4',
     timezone: '+08:00',
+    // SQLite 配置（开发环境，自动使用）
+    sqlite_path: path.resolve(__dirname, '../../../data/linli_ai.db'),
   },
 
-  // Redis
+  // Redis（开发环境可选）
   redis: {
     host: process.env.REDIS_HOST || 'localhost',
     port: parseInt(process.env.REDIS_PORT || '6379', 10),
     password: process.env.REDIS_PASSWORD || undefined,
     db: 0,
+    enabled: !!process.env.REDIS_PASSWORD, // 有密码才启用
   },
 
   // JWT
