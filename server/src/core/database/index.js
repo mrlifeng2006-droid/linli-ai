@@ -255,7 +255,104 @@ function initTables() {
     );
     CREATE INDEX IF NOT EXISTS idx_voucher_merchant ON Campaign_Voucher(merchant_id);
     CREATE INDEX IF NOT EXISTS idx_voucher_code ON Campaign_Voucher(code);
+
+    -- 营销活动表
+    CREATE TABLE IF NOT EXISTS Marketing_Campaign (
+      id TEXT PRIMARY KEY,
+      merchant_id TEXT NOT NULL,
+      type TEXT NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT,
+      cover_image TEXT,
+      original_price INTEGER NOT NULL,
+      target_price INTEGER NOT NULL,
+      stock INTEGER NOT NULL,
+      stock_used INTEGER DEFAULT 0,
+      start_time TEXT NOT NULL,
+      end_time TEXT NOT NULL,
+      verify_expire_days INTEGER DEFAULT 7,
+      rules TEXT,
+      status TEXT DEFAULT 'active',
+      participate_count INTEGER DEFAULT 0,
+      voucher_count INTEGER DEFAULT 0,
+      verify_count INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_campaign_merchant ON Marketing_Campaign(merchant_id);
+    CREATE INDEX IF NOT EXISTS idx_campaign_status ON Marketing_Campaign(status);
+
+    -- 活动参与表
+    CREATE TABLE IF NOT EXISTS Campaign_Participation (
+      id TEXT PRIMARY KEY,
+      campaign_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      current_price INTEGER,
+      help_count INTEGER DEFAULT 0,
+      group_id TEXT,
+      is_leader INTEGER DEFAULT 0,
+      status TEXT DEFAULT 'pending',
+      device_fingerprint TEXT,
+      ip TEXT,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_participation_campaign ON Campaign_Participation(campaign_id);
+    CREATE INDEX IF NOT EXISTS idx_participation_user ON Campaign_Participation(user_id);
+
+    -- 砍价助力记录表
+    CREATE TABLE IF NOT EXISTS Bargain_Help_Log (
+      id TEXT PRIMARY KEY,
+      participation_id TEXT NOT NULL,
+      helper_user_id TEXT NOT NULL,
+      reduce_amount INTEGER NOT NULL,
+      before_amount INTEGER NOT NULL,
+      after_amount INTEGER NOT NULL,
+      device_fingerprint TEXT,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_help_participation ON Bargain_Help_Log(participation_id);
+
+    -- 拼团组表
+    CREATE TABLE IF NOT EXISTS Group_Session (
+      id TEXT PRIMARY KEY,
+      campaign_id TEXT NOT NULL,
+      leader_user_id TEXT NOT NULL,
+      required_count INTEGER NOT NULL,
+      current_count INTEGER DEFAULT 1,
+      status TEXT DEFAULT 'waiting',
+      expire_at TEXT NOT NULL,
+      success_at TEXT,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_group_campaign ON Group_Session(campaign_id);
+    CREATE INDEX IF NOT EXISTS idx_group_status ON Group_Session(status);
+
+    -- 核销尝试日志表
+    CREATE TABLE IF NOT EXISTS Verify_Attempt_Log (
+      id TEXT PRIMARY KEY,
+      voucher_code TEXT NOT NULL,
+      merchant_id TEXT NOT NULL,
+      staff_id TEXT,
+      result TEXT NOT NULL,
+      error_message TEXT,
+      distance_meters INTEGER,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_verify_code ON Verify_Attempt_Log(voucher_code);
+
+    -- 活动分享记录表
+    CREATE TABLE IF NOT EXISTS Activity_Share_Log (
+      id TEXT PRIMARY KEY,
+      campaign_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      share_channel TEXT,
+      click_count INTEGER DEFAULT 0,
+      convert_count INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_share_campaign ON Activity_Share_Log(campaign_id);
   `);
+  console.log('✅ 数据库表初始化完成');
   console.log('✅ 数据库表初始化完成');
 }
 
