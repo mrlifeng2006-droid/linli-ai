@@ -1,9 +1,9 @@
-// utils/api.js —— 邻里AI 统一API请求工具
+// utils/api.js —— 邻里AI 统一API请求工具（v2 路由已对齐后端）
 const API_BASE = 'http://localhost:3000/api/v1';
 
 /**
  * 统一请求封装
- * @param {string} path  - API路径，如 '/user/profile'
+ * @param {string} path  - API路径
  * @param {string} method - GET|POST|PUT|DELETE
  * @param {object} data  - 请求体数据
  * @param {boolean} auth - 是否携带JWT（默认false）
@@ -25,7 +25,6 @@ function request(path, method = 'GET', data = null, auth = false) {
         if (res.statusCode >= 200 && res.statusCode < 300) {
           resolve(res.data);
         } else if (res.statusCode === 401) {
-          // Token过期或未登录，清除并跳转登录
           wx.removeStorageSync('token');
           wx.removeStorageSync('userInfo');
           wx.showToast({ title: '请先登录', icon: 'none' });
@@ -46,17 +45,17 @@ function request(path, method = 'GET', data = null, auth = false) {
 
 // ===== 认证模块 =====
 const auth = {
-  // 发送验证码
+  // 发送验证码（_dev作为query参数）
   sendCode(phone, purpose = 'register') {
-    return request('/user/send-code', 'POST', { phone, purpose, _dev: 1 });
+    return request('/user/send-code?_dev=1', 'POST', { phone, purpose });
   },
   // 注册
-  register(phone, code, password = '') {
-    return request('/user/register', 'POST', { phone, code, password });
+  register(phone, code) {
+    return request('/user/register', 'POST', { phone, code });
   },
   // 登录
   login(phone, code) {
-    return request('/user/login', 'POST', { phone, code, _dev: 1 });
+    return request('/user/login', 'POST', { phone, code });
   },
   // 获取用户资料
   getProfile() {
@@ -64,7 +63,7 @@ const auth = {
   },
   // 获取VIP状态
   getVipStatus() {
-    return request('/user/vip', 'GET', null, true);
+    return request('/user/vip-status', 'GET', null, true);
   },
 };
 
@@ -72,23 +71,23 @@ const auth = {
 const merchant = {
   // 发送验证码
   sendCode(phone) {
-    return request('/user/send-code', 'POST', { phone, purpose: 'merchant_register', _dev: 1 });
+    return request('/user/send-code?_dev=1', 'POST', { phone, purpose: 'merchant_register' });
   },
-  // 个人商家注册
+  // 个人商家注册（需先登录）
   registerPersonal(phone, code) {
-    return request('/merchant/register', 'POST', { phone, code, auth_type: 'personal' });
+    return request('/merchant/register/personal', 'POST', { phone, code }, true);
   },
-  // 企业商家入驻
+  // 企业商家入驻（需先登录）
   registerEnterprise(data) {
-    return request('/merchant/enterprise', 'POST', data, true);
+    return request('/merchant/register/business', 'POST', data, true);
   },
   // 获取商家资料
   getProfile() {
-    return request('/merchant/profile', 'GET', null, true);
+    return request('/merchant/info', 'GET', null, true);
   },
   // 更新商家画像
   updateProfile(data) {
-    return request('/merchant/profile', 'PUT', data, true);
+    return request('/merchant/info', 'PUT', data, true);
   },
   // 刷新地标
   refreshLandmarks() {
@@ -96,7 +95,7 @@ const merchant = {
   },
   // 经营看板
   getDashboard() {
-    return request('/merchant/dashboard', 'GET', null, true);
+    return request('/merchant/stats', 'GET', null, true);
   },
   // GEO优化报告
   getGeoReport() {
@@ -105,6 +104,10 @@ const merchant = {
   // 店员邀请
   inviteStaff(phone, code) {
     return request('/merchant/staff/invite', 'POST', { phone, code }, true);
+  },
+  // 店员列表
+  getStaffList() {
+    return request('/merchant/staff/list', 'GET', null, true);
   },
 };
 
@@ -174,8 +177,8 @@ const campaign = {
   detail(id) {
     return request(`/campaign/detail/${id}`, 'GET', null, true);
   },
-  // 发起砍价参与
-  joinBargain(campaignId) {
+  // 参与活动（砍价/秒杀）
+  join(campaignId) {
     return request('/campaign/join', 'POST', { campaign_id: campaignId }, true);
   },
   // 参团
@@ -192,7 +195,7 @@ const campaign = {
   },
   // 秒杀抢购
   seckill(campaignId) {
-    return request('/campaign/seckill', 'POST', { campaign_id: campaignId }, true);
+    return request('/campaign/join', 'POST', { campaign_id: campaignId }, true);
   },
   // 我的券包
   myVouchers() {

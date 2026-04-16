@@ -58,7 +58,9 @@ function checkAntiSpam(merchantId, userId, action) {
 function createCampaign(merchantId, data) {
   const { type, title, description, cover_image, original_price, target_price, stock, start_time, end_time, verify_expire_days, rules } = data;
 
-  if (!type || !title || !original_price || !target_price || !stock) {
+  // 兼容前端传的 name 字段
+  const campaignTitle = title || data.name;
+  if (!type || !campaignTitle || !original_price || !target_price || !stock) {
     return { success: false, message: '缺少必要参数' };
   }
 
@@ -68,7 +70,7 @@ function createCampaign(merchantId, data) {
   execute(
     `INSERT INTO Marketing_Campaign (id, merchant_id, type, title, description, cover_image, original_price, target_price, stock, stock_used, start_time, end_time, verify_expire_days, rules, status, created_at, updated_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, 'active', ?, ?)`,
-    [id, merchantId, type, title, description || '', cover_image || '', original_price, target_price, stock,
+    [id, merchantId, type, campaignTitle, description || '', cover_image || '', original_price, target_price, stock,
      start_time || now, end_time || now, verify_expire_days || 7, JSON.stringify(rules || {}), now, now]
   );
 

@@ -20,7 +20,7 @@ function registerPersonalMerchant(merchantId, data) {
   execute(
     `UPDATE Merchant SET phone=?, nickname=?, auth_type='wechat_realname', auth_status='approved',
      auth_verified_at=?, wechat_auth_transaction_id=?, points=COALESCE(points,0)+20, updated_at=? WHERE id=?`,
-    [phone, nickname || '新商家', now, auth_transaction_id || '', now, now, merchantId]
+    [phone, nickname || '新商家', now, auth_transaction_id || '', now, merchantId]
   );
 
   const existingProfile = queryOne('SELECT id FROM Merchant_Profile WHERE merchant_id=?', [merchantId]);
@@ -46,7 +46,7 @@ function registerBusinessMerchant(merchantId, data) {
   execute(
     `UPDATE Merchant SET phone=?, nickname=?, auth_type='business_license', auth_status='approved',
      auth_verified_at=?, points=COALESCE(points,0)+50, updated_at=? WHERE id=?`,
-    [phone, nickname || '企业商家', now, now, merchantId]
+    [phone, nickname || '企业商家', now, merchantId]
   );
 
   const existingProfile = queryOne('SELECT id FROM Merchant_Profile WHERE merchant_id=?', [merchantId]);
