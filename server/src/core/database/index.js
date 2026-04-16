@@ -208,6 +208,53 @@ function initTables() {
     );
     CREATE UNIQUE INDEX IF NOT EXISTS idx_wechat_openid ON Wechat_Bind(openid, platform);
     CREATE INDEX IF NOT EXISTS idx_wechat_merchant ON Wechat_Bind(merchant_id);
+
+    -- 店员表
+    CREATE TABLE IF NOT EXISTS Staff (
+      id TEXT PRIMARY KEY,
+      merchant_id TEXT NOT NULL,
+      openid TEXT NOT NULL,
+      name TEXT, phone TEXT,
+      status TEXT DEFAULT 'pending',
+      invited_at TEXT, activated_at TEXT,
+      verify_count INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_staff_merchant ON Staff(merchant_id);
+    CREATE INDEX IF NOT EXISTS idx_staff_openid ON Staff(openid);
+
+    -- 招募入口日志表
+    CREATE TABLE IF NOT EXISTS Merchant_Recruit_Entry_Log (
+      id TEXT PRIMARY KEY,
+      user_id TEXT,
+      entry_type TEXT NOT NULL,
+      action TEXT NOT NULL,
+      from_page TEXT,
+      device_info TEXT,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_recruit_user ON Merchant_Recruit_Entry_Log(user_id);
+    CREATE INDEX IF NOT EXISTS idx_recruit_entry ON Merchant_Recruit_Entry_Log(entry_type);
+
+    -- 核销券表
+    CREATE TABLE IF NOT EXISTS Campaign_Voucher (
+      id TEXT PRIMARY KEY,
+      campaign_id TEXT,
+      merchant_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      participation_id TEXT,
+      code TEXT NOT NULL,
+      code_hash TEXT,
+      status TEXT DEFAULT 'unused',
+      expires_at TEXT,
+      verified_at TEXT,
+      verified_by TEXT,
+      verified_location TEXT,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_voucher_merchant ON Campaign_Voucher(merchant_id);
+    CREATE INDEX IF NOT EXISTS idx_voucher_code ON Campaign_Voucher(code);
   `);
   console.log('✅ 数据库表初始化完成');
 }
