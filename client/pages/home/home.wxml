@@ -1,2 +1,114 @@
 <!--pages/home/home.wxml-->
-<text>pages/home/home.wxml</text>
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input">
+      <text class="search-icon">🔍</text>
+      <text class="search-placeholder">搜索商家、商品...</text>
+    </view>
+  </view>
+
+  <!-- Banner轮播 -->
+  <swiper class="banner" indicator-dots indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#fff" autoplay interval="3000">
+    <swiper-item>
+      <view class="banner-item banner-1">
+        <text class="banner-title">邻里AI助手</text>
+        <text class="banner-sub">智能连接社区生活</text>
+      </view>
+    </swiper-item>
+    <swiper-item>
+      <view class="banner-item banner-2">
+        <text class="banner-title">商家入驻</text>
+        <text class="banner-sub">免费开通线上店铺</text>
+      </view>
+    </swiper-item>
+    <swiper-item>
+      <view class="banner-item banner-3">
+        <text class="banner-title">限时活动</text>
+        <text class="banner-sub">附近商家优惠等你来</text>
+      </view>
+    </swiper-item>
+  </swiper>
+
+  <!-- 快捷入口 -->
+  <view class="quick-nav">
+    <view class="nav-item" bindtap="goToAI">
+      <view class="nav-icon nav-ai">🤖</view>
+      <text class="nav-text">AI生成</text>
+    </view>
+    <view class="nav-item" bindtap="goToMerchant">
+      <view class="nav-icon nav-merchant">🏪</view>
+      <text class="nav-text">附近商家</text>
+    </view>
+    <view class="nav-item" bindtap="goToMarketing">
+      <view class="nav-icon nav-marketing">📣</view>
+      <text class="nav-text">营销工具</text>
+    </view>
+    <view class="nav-item" bindtap="goToDistribution">
+      <view class="nav-icon nav-dist">📱</view>
+      <text class="nav-text">内容分发</text>
+    </view>
+  </view>
+
+  <!-- 附近商家 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">🏪 附近商家</text>
+      <text class="section-more" bindtap="goToMerchant">更多 ›</text>
+    </view>
+    <view class="merchant-list">
+      <view class="merchant-card">
+        <view class="merchant-info">
+          <text class="merchant-name">奶茶铺子</text>
+          <text class="merchant-desc">奶茶饮品 · 评分4.8 · 500m</text>
+          <text class="merchant-tag">新店开业</text>
+        </view>
+        <text class="merchant-action">进店</text>
+      </view>
+      <view class="merchant-card">
+        <view class="merchant-info">
+          <text class="merchant-name">便利超市</text>
+          <text class="merchant-desc">日用百货 · 评分4.6 · 800m</text>
+          <text class="merchant-tag">满减优惠</text>
+        </view>
+        <text class="merchant-action">进店</text>
+      </view>
+      <view class="merchant-card">
+        <view class="merchant-info">
+          <text class="merchant-name">洗衣服务</text>
+          <text class="merchant-desc">干洗护理 · 评分4.9 · 300m</text>
+          <text class="merchant-tag">极速送达</text>
+        </view>
+        <text class="merchant-action">进店</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 活动精选 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">🎯 活动精选</text>
+      <text class="section-more" bindtap="goToMarketing">更多 ›</text>
+    </view>
+    <view class="activity-list">
+      <view class="activity-card">
+        <view class="activity-left">
+          <text class="activity-name">限时折扣</text>
+          <text class="activity-desc">全场8折 · 仅限本周</text>
+        </view>
+        <view class="activity-right">
+          <text class="activity-tag">🔥 进行中</text>
+        </view>
+      </view>
+      <view class="activity-card">
+        <view class="activity-left">
+          <text class="activity-name">满减活动</text>
+          <text class="activity-desc">满50减10 · 满100减30</text>
+        </view>
+        <view class="activity-right">
+          <text class="activity-tag">📈 参与中</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

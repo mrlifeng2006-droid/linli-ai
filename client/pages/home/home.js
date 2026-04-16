@@ -1,66 +1,26 @@
 // pages/home/home.js
 Page({
+  data: {},
 
-  /**
-   * 页面的初始数据
-   */
-  data: {
+  onLoad(options) {},
 
+  // 跳转到AI生成
+  goToAI() {
+    wx.switchTab({ url: '/pages/generate/generate' });
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  // 跳转到商家列表
+  goToMerchant() {
+    wx.navigateTo({ url: '/pages/merchant/merchant' });
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  // 跳转到营销
+  goToMarketing() {
+    wx.switchTab({ url: '/pages/marketing/marketing' });
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
+  // 跳转到内容分发
+  goToDistribution() {
+    wx.navigateTo({ url: '/pages/distribution/distribution' });
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
-  }
-})
+});

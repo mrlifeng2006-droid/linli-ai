@@ -1,66 +1,66 @@
 // pages/user/user.js
+const app = getApp();
+
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    isLogin: false,
+    username: '',
+    isVip: false,
+    isMerchant: false,
+    points: 0,
+    contentCount: 0,
+    favorites: 0,
+    history: 0,
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow() {
-
+    const token = wx.getStorageSync('token');
+    if (token) {
+      this.setData({
+        isLogin: true,
+        username: wx.getStorageSync('username') || '用户',
+        isVip: wx.getStorageSync('isVip') || false,
+        isMerchant: wx.getStorageSync('isMerchant') || false,
+        points: wx.getStorageSync('points') || 0,
+        contentCount: wx.getStorageSync('contentCount') || 0,
+        favorites: wx.getStorageSync('favorites') || 0,
+        history: wx.getStorageSync('history') || 0,
+      });
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  goToLogin() {
+    wx.navigateTo({ url: '/pages/login/login' });
   },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
+  goToHistory() {
+    wx.showToast({ title: '功能开发中', icon: 'none' });
   },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
+  goToFavorites() {
+    wx.showToast({ title: '功能开发中', icon: 'none' });
   },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
+  goToTemplates() {
+    wx.showToast({ title: '功能开发中', icon: 'none' });
   },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
-  }
-})
+  goToMyMerchant() {
+    wx.navigateTo({ url: '/pages/merchant/merchant' });
+  },
+  goToSettings() {
+    wx.showToast({ title: '功能开发中', icon: 'none' });
+  },
+  goToAbout() {
+    wx.showToast({ title: '功能开发中', icon: 'none' });
+  },
+  onLogout() {
+    wx.showModal({
+      title: '确认退出',
+      content: '确定要退出登录吗？',
+      success: (res) => {
+        if (res.confirm) {
+          wx.clearStorageSync();
+          this.setData({ isLogin: false, username: '', isVip: false, isMerchant: false });
+          wx.showToast({ title: '已退出', icon: 'success' });
+        }
+      },
+    });
+  },
+});

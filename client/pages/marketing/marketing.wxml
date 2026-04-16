@@ -1,2 +1,97 @@
 <!--pages/marketing/marketing.wxml-->
-<text>pages/marketing/marketing.wxml</text>
+<view class="container">
+  <!-- 顶部标题 -->
+  <view class="header">
+    <text class="header-title">📣 营销工具</text>
+    <text class="header-sub">专业营销方案，助力商家获客增长</text>
+  </view>
+
+  <!-- 工具分类 -->
+  <view class="tool-grid">
+    <view class="tool-card" bindtap="goToActivity">
+      <view class="tool-icon">🎯</view>
+      <text class="tool-name">活动管理</text>
+      <text class="tool-desc">创建限时折扣、满减活动</text>
+    </view>
+    <view class="tool-card" bindtap="goToPoster">
+      <view class="tool-icon">🎨</view>
+      <text class="tool-name">海报设计</text>
+      <text class="tool-desc">AI生成营销海报</text>
+    </view>
+    <view class="tool-card" bindtap="goToDistribution">
+      <view class="tool-icon">📱</view>
+      <text class="tool-name">内容分发</text>
+      <text class="tool-desc">一键分发到多平台</text>
+    </view>
+    <view class="tool-card" bindtap="goToGroup">
+      <view class="tool-icon">👥</view>
+      <text class="tool-name">社群运营</text>
+      <text class="tool-desc">群发消息、自动化触达</text>
+    </view>
+    <view class="tool-card" bindtap="goToAnalysis">
+      <view class="tool-icon">📊</view>
+      <text class="tool-name">效果分析</text>
+      <text class="tool-desc">GEO数据看板</text>
+    </view>
+    <view class="tool-card" bindtap="goToTemplate">
+      <view class="tool-icon">📐</view>
+      <text class="tool-name">文案模板</text>
+      <text class="tool-desc">海量营销模板</text>
+    </view>
+  </view>
+
+  <!-- 当前活动 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">🔥 进行中活动</text>
+      <text class="section-more" bindtap="goToActivity">管理 ›</text>
+    </view>
+
+    <view class="activity-card" wx:if="{{activities.length > 0}}" wx:for="{{activities}}" wx:key="id">
+      <view class="activity-info">
+        <text class="activity-name">{{item.name}}</text>
+        <text class="activity-meta">{{item.type}} · {{item.startTime}} 开始</text>
+      </view>
+      <view class="activity-stats">
+        <text class="stat-label">曝光</text>
+        <text class="stat-val">{{item.views}}</text>
+      </view>
+      <view class="activity-stats">
+        <text class="stat-label">参与</text>
+        <text class="stat-val">{{item.join}}</text>
+      </view>
+      <view class="activity-status {{item.status}}">{{item.statusText}}</view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!activities || activities.length === 0}}">
+      <text class="empty-icon">🎁</text>
+      <text class="empty-text">暂无进行中活动</text>
+      <view class="empty-btn" bindtap="goToActivity">创建活动</view>
+    </view>
+  </view>
+
+  <!-- GEO数据 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">📍 GEO曝光数据</text>
+    </view>
+    <view class="geo-summary">
+      <view class="geo-item">
+        <text class="geo-num">{{geoData.local曝光 || 0}}</text>
+        <text class="geo-label">本地曝光</text>
+      </view>
+      <view class="geo-item">
+        <text class="geo-num">{{geoData.自然曝光 || 0}}</text>
+        <text class="geo-label">自然曝光</text>
+      </view>
+      <view class="geo-item">
+        <text class="geo-num">{{geoData.互动 || 0}}</text>
+        <text class="geo-label">互动次数</text>
+      </view>
+    </view>
+    <view class="geo-tip">
+      <text>💡 开启GEO注入后，内容将在附近3公里用户中优先展示</text>
+    </view>
+  </view>
+</view>

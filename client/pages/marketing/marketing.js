@@ -1,66 +1,20 @@
 // pages/marketing/marketing.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    activities: [],
+    geoData: {
+      local曝光: 0,
+      自然曝光: 0,
+      互动: 0,
+    },
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
+  onLoad() {},
 
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
-  }
-})
+  goToActivity() { wx.showToast({ title: '功能开发中', icon: 'none' }); },
+  goToPoster() { wx.showToast({ title: '功能开发中', icon: 'none' }); },
+  goToDistribution() { wx.switchTab({ url: '/pages/distribution/distribution' }); },
+  goToGroup() { wx.showToast({ title: '功能开发中', icon: 'none' }); },
+  goToAnalysis() { wx.showToast({ title: '功能开发中', icon: 'none' }); },
+  goToTemplate() { wx.showToast({ title: '功能开发中', icon: 'none' }); },
+});

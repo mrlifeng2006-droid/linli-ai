@@ -2,16 +2,10 @@
   "name": "linli-ai-client",
   "version": "1.0.0",
   "description": "邻里AI V17.0 微信小程序",
-  "main": "miniprogram/app.ts",
-  "scripts": {
-    "dev": "miniprogram-npm run dev",
-    "build": "miniprogram-npm run build"
-  },
   "dependencies": {
     "@vant/weapp": "^1.11.0"
   },
   "devDependencies": {
-    "miniprogram-npm": "^1.0.0",
     "typescript": "^5.5.3"
   }
 }

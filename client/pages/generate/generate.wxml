@@ -1,2 +1,89 @@
 <!--pages/generate/generate.wxml-->
-<text>pages/generate/generate.wxml</text>
+<view class="container">
+  <!-- 标题区 -->
+  <view class="header">
+    <text class="header-title">🤖 AI智能生成</text>
+    <text class="header-sub">输入店铺信息，AI自动生成营销文案和内容分发方案</text>
+  </view>
+
+  <!-- 店铺输入表单 -->
+  <view class="form-card">
+    <view class="form-title">📋 店铺基本信息</view>
+
+    <view class="form-item">
+      <text class="form-label">店铺名称</text>
+      <input class="form-input" placeholder="请输入店铺名称" bindinput="onShopNameInput" value="{{shopName}}" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">行业类型</text>
+      <picker mode="selector" range="{{industryList}}" range-key="name" bindchange="onIndustryChange">
+        <view class="form-picker">
+          <text class="{{industry ? '' : 'placeholder'}}">{{industry || '请选择行业类型'}}</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">详细地址</text>
+      <input class="form-input" placeholder="如：广东省深圳市南山区科技园" bindinput="onAddressInput" value="{{address}}" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">店铺特色</text>
+      <textarea class="form-textarea" placeholder="描述店铺的特色、优势、主营产品或服务，越详细AI生成效果越好..." bindinput="onFeaturesInput" value="{{features}}" auto-height />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">目标客群</text>
+      <input class="form-input" placeholder="如：周边社区居民、白领上班族" bindinput="onTargetInput" value="{{target}}" />
+    </view>
+  </view>
+
+  <!-- 生成选项 -->
+  <view class="form-card">
+    <view class="form-title">⚙️ 生成选项</view>
+
+    <view class="form-item">
+      <text class="form-label">内容类型</text>
+      <view class="checkbox-group">
+        <view class="checkbox-item {{checkedTypes.social ? 'checked' : ''}}" bindtap="toggleType" data-type="social">
+          <text class="checkbox-icon">{{checkedTypes.social ? '✓' : ''}}</text>
+          <text>朋友圈文案</text>
+        </view>
+        <view class="checkbox-item {{checkedTypes.shortVideo ? 'checked' : ''}}" bindtap="toggleType" data-type="shortVideo">
+          <text class="checkbox-icon">{{checkedTypes.shortVideo ? '✓' : ''}}</text>
+          <text>短视频脚本</text>
+        </view>
+        <view class="checkbox-item {{checkedTypes.poster ? 'checked' : ''}}" bindtap="toggleType" data-type="poster">
+          <text class="checkbox-icon">{{checkedTypes.poster ? '✓' : ''}}</text>
+          <text>海报文案</text>
+        </view>
+        <view class="checkbox-item {{checkedTypes.groupMsg ? 'checked' : ''}}" bindtap="toggleType" data-type="groupMsg">
+          <text class="checkbox-icon">{{checkedTypes.groupMsg ? '✓' : ''}}</text>
+          <text>群发消息</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">文案风格</text>
+      <view class="style-group">
+        <view class="style-item {{selectedStyle === 'friendly' ? 'active' : ''}}" bindtap="selectStyle" data-style="friendly">😊 亲切</view>
+        <view class="style-item {{selectedStyle === 'professional' ? 'active' : ''}}" bindtap="selectStyle" data-style="professional">💼 专业</view>
+        <view class="style-item {{selectedStyle === 'trendy' ? 'active' : ''}}" bindtap="selectStyle" data-style="trendy">🔥 潮流</view>
+        <view class="style-item {{selectedStyle === 'humor' ? 'active' : ''}}" bindtap="selectStyle" data-style="humor">😂 幽默</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 一键生成按钮 -->
+  <view class="generate-btn-wrap">
+    <view class="generate-btn {{generating ? 'loading' : ''}}" bindtap="onGenerate">
+      <text class="btn-icon">✨</text>
+      <text class="btn-text">{{generating ? 'AI生成中...' : '开始生成'}}</text>
+    </view>
+    <text class="generate-tip">* AI将自动注入GEO定位信息，让内容更具本地曝光效果</text>
+  </view>
+</view>
