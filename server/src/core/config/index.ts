@@ -5,8 +5,12 @@
 import dotenv from 'dotenv';
 import path from 'path';
 
-// 加载 .env 文件
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+// server/ 根目录（不依赖 __dirname，运行时固定）
+// server/ 根目录（dist/core/config → server/ 需要上3级）
+const SERVER_ROOT = path.resolve(__dirname, '../../../');
+
+// 加载 .env 文件（基于 server/ 根目录）
+dotenv.config({ path: path.join(SERVER_ROOT, '.env') });
 
 // 检测环境：是否使用MySQL（生产模式）
 const USE_MYSQL = process.env.DB_TYPE !== 'sqlite' && process.env.DB_PASSWORD;
@@ -28,7 +32,7 @@ export const config = {
     charset: 'utf8mb4',
     timezone: '+08:00',
     // SQLite 配置（开发环境，自动使用）
-    sqlite_path: path.resolve(__dirname, '../../../data/linli_ai.db'),
+    sqlite_path: path.join(SERVER_ROOT, 'data/linli_ai.db'),
   },
 
   // Redis（开发环境可选）

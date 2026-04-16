@@ -1,4 +1,6 @@
-// pages/generate/generate.js
+
+
+// pages/generate/generate.js —— 2026-04-16 22:25 Echo 热重载测试
 const app = getApp();
 
 Page({
@@ -78,14 +80,13 @@ Page({
     this.setData({ generating: true });
 
     try {
-      const res = await wx.cloud.callContainer({
-        config: { env: 'prod-xxxx' },
-        service: 'client',
-        path: '/api/v1/generate',
+      const res = await wx.request({
+        url: 'http://127.0.0.1:3000/api/v1/ai/generate',
         method: 'POST',
+        header: { 'Content-Type': 'application/json' },
         data: {
           shopName: this.data.shopName,
-          industry: this.data.industry,
+          industry: this.data.industry || '其他',
           address: this.data.address,
           features: this.data.features,
           target: this.data.target,
@@ -94,15 +95,21 @@ Page({
         },
       });
 
-      if (res.data.code === 0) {
-        const result = encodeURIComponent(JSON.stringify(res.data.data));
+      const data = res.data;
+      if (!data) {
+        console.error('响应为空，statusCode:', res.statusCode, 'headers:', res.header);
+        wx.showToast({ title: '后端无响应，请确认服务已启动', icon: 'none' });
+        return;
+      }
+      if (data.code === 0) {
+        const result = encodeURIComponent(JSON.stringify(data.data));
         wx.navigateTo({ url: `/pages/result/result?data=${result}` });
       } else {
-        wx.showToast({ title: res.data.msg || '生成失败', icon: 'none' });
+        wx.showToast({ title: data.message || '生成失败', icon: 'none' });
       }
     } catch (err) {
       console.error('generate error:', err);
-      wx.showToast({ title: '网络错误，请重试', icon: 'none' });
+      wx.showToast({ title: '网络错误，请检查后端服务', icon: 'none' });
     } finally {
       this.setData({ generating: false });
     }

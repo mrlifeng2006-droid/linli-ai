@@ -1,2 +1,28 @@
 <!--pages/result/result.wxml-->
-<text>pages/result/result.wxml</text>
+<view class="container">
+  <!-- 顶部标题 -->
+  <view class="header">
+    <text class="title">✨ 生成完成</text>
+    <text class="subtitle">{{shopName}} · 营销文案</text>
+  </view>
+
+  <!-- 文案列表 -->
+  <view class="result-list">
+    <block wx:for="{{results}}" wx:key="index">
+      <view class="result-card">
+        <view class="card-header">
+          <text class="card-type">{{item.typeName}}</text>
+          <text class="card-copy-btn" bindtap="copyContent" data-index="{{index}}">复制文案</text>
+        </view>
+        <text class="card-content">{{item.displayContent}}</text>
+        <text class="card-hashtags" wx:if="{{item.hashtags}}">{{item.hashtags}}</text>
+      </view>
+    </block>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-bar">
+    <button class="btn-retry" bindtap="onBack">继续生成</button>
+    <button class="btn-share" open-type="share">分享给好友</button>
+  </view>
+</view>
