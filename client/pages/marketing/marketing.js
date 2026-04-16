@@ -3,9 +3,9 @@ Page({
   data: {
     activities: [],
     geoData: {
-      local曝光: 0,
-      自然曝光: 0,
-      互动: 0,
+      localViews: 0,
+      naturalViews: 0,
+      interactions: 0,
     },
   },
 

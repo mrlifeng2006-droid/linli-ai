@@ -78,15 +78,15 @@
     </view>
     <view class="geo-summary">
       <view class="geo-item">
-        <text class="geo-num">{{geoData.local曝光 || 0}}</text>
+        <text class="geo-num">{{geoData.localViews || 0}}</text>
         <text class="geo-label">本地曝光</text>
       </view>
       <view class="geo-item">
-        <text class="geo-num">{{geoData.自然曝光 || 0}}</text>
+        <text class="geo-num">{{geoData.naturalViews || 0}}</text>
         <text class="geo-label">自然曝光</text>
       </view>
       <view class="geo-item">
-        <text class="geo-num">{{geoData.互动 || 0}}</text>
+        <text class="geo-num">{{geoData.interactions || 0}}</text>
         <text class="geo-label">互动次数</text>
       </view>
     </view>
