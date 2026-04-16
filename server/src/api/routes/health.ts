@@ -1,8 +1,7 @@
 import Router from 'koa-router';
-const router = new Router({ prefix: '' });
+const router = new Router();
 
-// 健康检查（独立路由，不受 /api/v1 前缀影响）
-router.get('/api/v1/health', (ctx) => {
+router.get('/health', (ctx) => {
   ctx.body = {
     code: 0,
     message: 'ok',
