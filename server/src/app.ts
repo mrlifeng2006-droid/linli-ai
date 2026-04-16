@@ -27,8 +27,16 @@ app.use(async (ctx, next) => {
       code: ctx.status,
       message: err.message || 'Internal Server Error',
     };
-    if (config.isDev) console.error('❌ 错误:', err.message);
+    console.error('❌ Koa错误:', err.stack || err);
   }
+});
+
+// 全局未捕获异常
+process.on('uncaughtException', (err) => {
+  console.error('💥 UncaughtException:', err.stack || err);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('💥 UnhandledRejection:', reason);
 });
 
 // 加载路由

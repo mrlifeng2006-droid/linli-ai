@@ -9,8 +9,9 @@ import {
   updateContent,
   deleteContent,
   type ContentData,
-} from '../../modules/content/content.service.js';
-import { requireAuth } from '../../modules/user/auth.service.js';
+} from './content.service.js';
+import { getCurrentMerchantId, requireAuth } from '../user/auth.service.js';
+import { queryOne } from '../../core/database/index.js';
 
 const router = new Router({ prefix: '/content' });
 
