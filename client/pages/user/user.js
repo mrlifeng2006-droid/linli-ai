@@ -10,7 +10,7 @@ Page({
     points: 0,
     contentCount: 0,
     favorites: 0,
-    history: 0,
+    browseCount: 0,
   },
 
   onShow() {
@@ -24,7 +24,18 @@ Page({
         points: wx.getStorageSync('points') || 0,
         contentCount: wx.getStorageSync('contentCount') || 0,
         favorites: wx.getStorageSync('favorites') || 0,
-        history: wx.getStorageSync('history') || 0,
+        browseCount: wx.getStorageSync('browseCount') || 0,
+      });
+    } else {
+      this.setData({
+        isLogin: false,
+        username: '',
+        isVip: false,
+        isMerchant: false,
+        points: 0,
+        contentCount: 0,
+        favorites: 0,
+        browseCount: 0,
       });
     }
   },
@@ -57,7 +68,16 @@ Page({
       success: (res) => {
         if (res.confirm) {
           wx.clearStorageSync();
-          this.setData({ isLogin: false, username: '', isVip: false, isMerchant: false });
+          this.setData({
+            isLogin: false,
+            username: '',
+            isVip: false,
+            isMerchant: false,
+            points: 0,
+            contentCount: 0,
+            favorites: 0,
+            browseCount: 0,
+          });
           wx.showToast({ title: '已退出', icon: 'success' });
         }
       },

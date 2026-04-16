@@ -66,6 +66,9 @@
   font-size: 24rpx;
   color: rgba(255,255,255,0.85);
 }
+.user-desc.unlogin {
+  color: rgba(255,255,255,0.9);
+}
 
 /* 数据统计卡片 */
 .stats-card {
@@ -112,6 +115,9 @@
   margin-bottom: 16rpx;
   padding-left: 8rpx;
 }
+.menu-title.mt30 {
+  margin-top: 30rpx;
+}
 .menu-list {
   background: #fff;
   border-radius: 16rpx;
@@ -120,29 +126,28 @@
 .menu-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 32rpx;
   border-bottom: 1rpx solid #f5f5f5;
 }
 .menu-item:last-child { border-bottom: none; }
-.menu-left {
-  display: flex;
-  align-items: center;
-}
 .menu-icon {
   font-size: 36rpx;
   margin-right: 20rpx;
 }
 .menu-text {
+  flex: 1;
   font-size: 30rpx;
   color: #333;
 }
-.menu-text.logout {
+.menu-text.logout-text {
   color: #ff4444;
 }
 .menu-arrow {
   font-size: 32rpx;
   color: #ccc;
+}
+.logout-item {
+  background: #fff;
 }
 
 /* 版本信息 */
