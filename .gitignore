@@ -34,3 +34,5 @@ temp/
 
 # COS临时文件
 cos_temp/
+*.db-shm
+*.db-wal

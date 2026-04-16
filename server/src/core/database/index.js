@@ -182,6 +182,31 @@ function initTables() {
       value TEXT, description TEXT,
       updated_at TEXT DEFAULT (datetime('now'))
     );
+
+    -- 短信验证码表
+    CREATE TABLE IF NOT EXISTS SMS_Code (
+      id           TEXT PRIMARY KEY,
+      phone        TEXT NOT NULL,
+      code         TEXT NOT NULL,
+      purpose      TEXT NOT NULL,
+      used         INTEGER DEFAULT 0,
+      expired_at   TEXT NOT NULL,
+      created_at   TEXT DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_sms_phone ON SMS_Code(phone, purpose, expired_at);
+
+    -- 微信登录绑定表
+    CREATE TABLE IF NOT EXISTS Wechat_Bind (
+      id          TEXT PRIMARY KEY,
+      merchant_id TEXT NOT NULL,
+      openid      TEXT NOT NULL,
+      unionid     TEXT,
+      platform    TEXT DEFAULT 'miniapp',
+      created_at  TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (merchant_id) REFERENCES Merchant(id) ON DELETE CASCADE
+    );
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_wechat_openid ON Wechat_Bind(openid, platform);
+    CREATE INDEX IF NOT EXISTS idx_wechat_merchant ON Wechat_Bind(merchant_id);
   `);
   console.log('✅ 数据库表初始化完成');
 }

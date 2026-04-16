@@ -81,7 +81,7 @@ Page({
 
     try {
       const res = await wx.request({
-        url: 'http://127.0.0.1:3000/api/v1/ai/generate',
+        url: 'https://textbook-inspiration-float-touring.trycloudflare.com/api/v1/ai/generate',
         method: 'POST',
         header: { 'Content-Type': 'application/json' },
         data: {
