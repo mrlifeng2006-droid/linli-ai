@@ -146,6 +146,7 @@ router.get('/profile', requireAuth(), async (ctx) => {
       status: merchant.status,
       lastLoginAt: merchant.last_login_at,
       createdAt: merchant.created_at,
+      isMerchant: !!profile?.store_name,
       storeName: profile?.store_name,
       industryCat: profile?.industry_cat,
       industryTags: profile?.industry_tags ? JSON.parse(profile.industry_tags) : [],

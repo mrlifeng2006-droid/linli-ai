@@ -1,2 +1,226 @@
-<!--pages/merchant/merchant.wxml-->
-<text>pages/merchant/merchant.wxml</text>
+<!-- pages/merchant/merchant.wxml —— 商家入驻/管理 -->
+<view class="container">
+
+  <!-- ========== 未入驻状态：入驻表单 ========== -->
+  <block wx:if="{{!isMerchant && !isLoading}}">
+    <view class="header-bar">
+      <text class="header-title">🏪 商家入驻</text>
+      <text class="header-sub">0押金 · 0费用 · 快速开通营销工具</text>
+    </view>
+
+    <view class="form-card">
+      <view class="form-title">基本信息</view>
+
+      <!-- 店铺名称 -->
+      <view class="form-item">
+        <text class="form-label">店铺名称 *</text>
+        <input class="form-input" placeholder="请输入店铺名称" value="{{formData.store_name}}"
+          bindinput="onStoreNameInput" maxlength="50" />
+      </view>
+
+      <!-- 行业分类 -->
+      <view class="form-item">
+        <text class="form-label">行业分类</text>
+        <picker mode="selector" range="{{industryList}}" value="{{industryIndex}}"
+          bindchange="onIndustryChange">
+          <view class="form-picker">
+            <text>{{industryList[industryIndex] || '请选择行业'}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 城市 -->
+      <view class="form-item">
+        <text class="form-label">所在城市 *</text>
+        <input class="form-input" placeholder="如：深圳市" value="{{formData.city}}"
+          bindinput="onCityChange" />
+      </view>
+
+      <!-- 详细地址 -->
+      <view class="form-item">
+        <text class="form-label">详细地址</text>
+        <input class="form-input" placeholder="商圈/街道/门牌号" value="{{formData.location_text}}"
+          bindinput="onLocationTextInput" />
+      </view>
+
+      <!-- 定位 -->
+      <view class="form-item">
+        <text class="form-label">GEO定位</text>
+        <view class="location-row">
+          <view class="location-info" wx:if="{{formData.location_lat}}">
+            <text class="location-coord">{{formData.location_lat.toFixed(4)}}, {{formData.location_lng.toFixed(4)}}</text>
+          </view>
+          <button class="btn-location" size="mini" bindtap="onGetLocation">📍 获取位置</button>
+        </view>
+        <text class="form-hint">开启位置权限可自动获取坐标，GEO注入需要</text>
+      </view>
+    </view>
+
+    <!-- 入驻按钮 -->
+    <view class="btn-area">
+      <button class="btn-primary" bindtap="onRegisterPersonal" loading="{{isRegistering}}">
+        {{isRegistering ? '入驻中...' : '立即入驻'}}
+      </button>
+    </view>
+
+    <!-- 权益说明 -->
+    <view class="benefit-list">
+      <view class="benefit-item">✅ 免费入驻，0押金0费用</view>
+      <view class="benefit-item">✅ AI智能生成营销文案</view>
+      <view class="benefit-item">✅ GEO地理精准曝光</view>
+      <view class="benefit-item">✅ 砍价/拼团/秒杀裂变工具</view>
+    </view>
+  </block>
+
+  <!-- ========== 加载中 ========== -->
+  <block wx:if="{{isLoading}}">
+    <view class="loading-state">
+      <text>加载中...</text>
+    </view>
+  </block>
+
+  <!-- ========== 已入驻状态：商家后台 ========== -->
+  <block wx:if="{{isMerchant && !isLoading}}">
+
+    <!-- 商家信息卡片 -->
+    <view class="merchant-card">
+      <view class="merchant-name">{{merchantInfo.store_name || merchantInfo.nickname || '我的商家'}}</view>
+      <view class="merchant-meta">
+        <text class="meta-tag">{{merchantInfo.industry_cat || '餐饮美食'}}</text>
+        <text class="meta-tag" wx:if="{{merchantInfo.city}}">{{merchantInfo.city}}</text>
+        <text class="meta-badge" wx:if="{{merchantInfo.auth_status === 'approved'}}">已认证</text>
+        <text class="meta-badge pending" wx:else>待认证</text>
+      </view>
+      <view class="merchant-stats-row">
+        <view class="mini-stat">
+          <text class="mini-num">{{stats && stats.total_views || 0}}</text>
+          <text class="mini-label">曝光</text>
+        </view>
+        <view class="mini-stat">
+          <text class="mini-num">{{stats && stats.total_clicks || 0}}</text>
+          <text class="mini-label">点击</text>
+        </view>
+        <view class="mini-stat">
+          <text class="mini-num">{{stats && stats.total_shares || 0}}</text>
+          <text class="mini-label">分享</text>
+        </view>
+        <view class="mini-stat">
+          <text class="mini-num">{{stats && stats.total_content || 0}}</text>
+          <text class="mini-label">内容</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- GEO数据看板 -->
+    <view class="section" wx:if="{{geoReport}}">
+      <view class="section-title">📍 GEO曝光报告</view>
+      <view class="geo-grid">
+        <view class="geo-card">
+          <text class="geo-num">{{geoReport.geo覆盖率 || 0}}%</text>
+          <text class="geo-label">覆盖率</text>
+        </view>
+        <view class="geo-card">
+          <text class="geo-num">{{geoReport.地标数量 || 0}}</text>
+          <text class="geo-label">周边地标</text>
+        </view>
+        <view class="geo-card">
+          <text class="geo-num">{{geoReport.预估曝光 || 0}}</text>
+          <text class="geo-label">预估曝光</text>
+        </view>
+      </view>
+      <button class="btn-small" bindtap="onRefreshGeo">🔄 刷新GEO</button>
+    </view>
+
+    <!-- Tab切换 -->
+    <view class="tab-bar">
+      <block wx:for="{{tabs}}" wx:key="key">
+        <view class="tab-item {{activeTab === item.key ? 'active' : ''}}"
+          bindtap="onTabChange" data-tab="{{item.key}}">
+          <text>{{item.label}}</text>
+        </view>
+      </block>
+    </view>
+
+    <!-- Tab: 商家信息 -->
+    <view class="tab-content" wx:if="{{activeTab === 'info'}}">
+      <view class="info-list">
+        <view class="info-row">
+          <text class="info-label">店铺名称</text>
+          <text class="info-value">{{merchantInfo.store_name || '-'}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">行业分类</text>
+          <text class="info-value">{{merchantInfo.industry_cat || '-'}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">所在城市</text>
+          <text class="info-value">{{merchantInfo.city || '-'}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">详细地址</text>
+          <text class="info-value">{{merchantInfo.location_text || '-'}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">认证状态</text>
+          <text class="info-value {{merchantInfo.auth_status === 'approved' ? 'green' : 'orange'}}">
+            {{merchantInfo.auth_status === 'approved' ? '已认证' : '待认证'}}
+          </text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Tab: 经营数据 -->
+    <view class="tab-content" wx:if="{{activeTab === 'stats'}}">
+      <view class="stats-card" wx:if="{{stats}}">
+        <view class="stat-row">
+          <text class="stat-label">累计曝光</text>
+          <text class="stat-value primary">{{stats.total_views || 0}}</text>
+        </view>
+        <view class="stat-row">
+          <text class="stat-label">累计点击</text>
+          <text class="stat-value">{{stats.total_clicks || 0}}</text>
+        </view>
+        <view class="stat-row">
+          <text class="stat-label">分享次数</text>
+          <text class="stat-value">{{stats.total_shares || 0}}</text>
+        </view>
+        <view class="stat-row">
+          <text class="stat-label">生成内容</text>
+          <text class="stat-value">{{stats.total_content || 0}}</text>
+        </view>
+        <view class="stat-row">
+          <text class="stat-label">转化率</text>
+          <text class="stat-value green">{{stats.conversion_rate || '0%'}}</text>
+        </view>
+      </view>
+      <view wx:else class="empty-state">
+        <text>暂无数据，继续生成内容吧</text>
+      </view>
+      <button class="btn-refresh" bindtap="onRefreshStats">🔄 刷新数据</button>
+    </view>
+
+    <!-- Tab: 店员管理 -->
+    <view class="tab-content" wx:if="{{activeTab === 'staff'}}">
+      <view class="staff-intro">
+        <text>邀请店员共同管理商家，店员可以核销优惠券</text>
+      </view>
+      <button class="btn-invite" bindtap="onInviteStaff">📱 邀请店员入驻</button>
+      <view class="staff-limit-hint">每个商家最多10名店员</view>
+    </view>
+
+    <!-- 快捷入口 -->
+    <view class="quick-actions">
+      <view class="action-item" bindtap="goToMarketing">
+        <text class="action-icon">🎯</text>
+        <text class="action-text">营销工具</text>
+      </view>
+      <view class="action-item" bindtap="onRefreshGeo">
+        <text class="action-icon">🗺️</text>
+        <text class="action-text">刷新GEO</text>
+      </view>
+    </view>
+
+  </block>
+
+</view>
