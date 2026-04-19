@@ -131,6 +131,7 @@ function buildGeneratePrompt(params: {
   types: string[];
   style: string;
   imageAnalysis?: string;
+  contactInfo?: { phone?: string; wechat?: string; address?: string };
 }): { system: string; user: string } {
   const typesText = params.types.map(t => TYPE_LABELS[t] || t).join('、');
   const styleText = STYLE_LABELS[params.style] || '亲切温暖';
@@ -140,6 +141,11 @@ function buildGeneratePrompt(params: {
     ? `## 🔍 图片分析（第一优先级，请务必融入文案）\n${params.imageAnalysis}\n\n## 📝 商家补充信息\n店铺名称：${params.shopName}\n行业类型：${params.industry}\n详细地址：${params.address}\n店铺特色：${params.features}\n目标客群：${params.target}\n`
     : `## 📝 商家信息\n店铺名称：${params.shopName}\n行业类型：${params.industry}\n详细地址：${params.address}\n店铺特色：${params.features}\n目标客群：${params.target}\n`;
 
+  // 联系方式植入要求
+  const contactSection = params.contactInfo
+    ? `\n## 📞 联系方式（必须在文案结尾自然融入）\n${params.contactInfo.phone ? `电话：${params.contactInfo.phone}` : ''}${params.contactInfo.wechat ? ` | 微信：${params.contactInfo.wechat}` : ''}${params.contactInfo.address ? ` | 地址：${params.contactInfo.address}` : ''}\n`
+    : '';
+
   const system = `你是专为本地生活商家服务的 AI 营销文案专家。
 
 【核心原则】
@@ -148,17 +154,20 @@ function buildGeneratePrompt(params: {
 3. 如果图片分析结果与商家自填信息有出入，以图片分析为准（因为图片是实拍，更真实）
 4. 文案自然融入地理位置信息
 5. 语言生动有感染力，适合社交媒体传播
-6. 带上合适的 hashtag 标签`;
+6. 带上合适的 hashtag 标签
+7. **最重要**：必须在文案结尾自然融入商家联系方式（电话/微信/地址），方便顾客联系`;
 
   const user = `请为以下商家生成营销文案：
 
-${imageSection}
+${imageSection}${contactSection}
 【需要生成的类型】${typesText}
 【文案风格】${styleText}
 
 请生成完整可用的文案内容，每种类型之间用"======"分隔。
 
-**重要**：请在文案中至少提到3处图片中识别出的具体细节（菜品名、环境特点、装修风格等），不能只围绕"咖啡"或"牛肉面"这类笼统词。`;
+**重要**：
+1. 请在文案中至少提到3处图片中识别出的具体细节（菜品名、环境特点、装修风格等），不能只围绕"咖啡"或"牛肉面"这类笼统词
+2. **必须在文案结尾自然融入联系方式**，格式参考："📞 咨询热线：xxx | 📍 地址：xxx" 或 "想了解更多，加微信：xxx"`;
 
   return { system, user };
 }
@@ -189,40 +198,7 @@ router.post('/generate', async (ctx) => {
     return;
   }
 
-  // ── ① 先做视觉分析（如果有图片）─────────────────
-  let imageAnalysis = '';
-  if (images && images.length > 0) {
-    console.log('👁️ 开始分析图片...');
-    try {
-      imageAnalysis = await analyzeImages(images);
-    } catch (err: any) {
-      console.warn('⚠️ 图片分析失败，继续生成:', err.message);
-    }
-  }
-
-  // ── ② 再生成文案 ─────────────────────────────
-  let aiContent = '';
-  try {
-    const { system, user } = buildGeneratePrompt({
-      shopName, industry, address,
-      features: features || '',
-      target: target || '',
-      types, style: style || 'friendly',
-      imageAnalysis,
-    });
-
-    aiContent = await callAI([
-      { role: 'system', content: system },
-      { role: 'user',   content: user },
-    ]);
-  } catch (err: any) {
-    console.error('❌ AI 文案生成失败:', err.message);
-    ctx.status = 500;
-    ctx.body = { code: 500, message: `AI 生成失败: ${err.message}` };
-    return;
-  }
-
-  // ── ③ 保存到数据库 ───────────────────────────
+  // ── ① 获取或创建商家 ─────────────────────────
   const openid = body.openid || 'test_openid_001';
   let merchant: any = await db.queryOne('SELECT id FROM Merchant WHERE openid = ?', [openid]);
   if (!merchant) {
@@ -239,6 +215,76 @@ router.post('/generate', async (ctx) => {
       [crypto.randomUUID(), mid, shopName, industry, address || '']
     );
   } else {
+    const profile = await db.queryOne('SELECT id FROM Merchant_Profile WHERE merchant_id = ?', [merchant.id]);
+    if (profile) {
+      await db.execute(
+        `UPDATE Merchant_Profile SET store_name=?, industry_cat=?, location_text=? WHERE merchant_id=?`,
+        [shopName, industry, address || '', merchant.id]
+      );
+    } else {
+      await db.execute(
+        `INSERT INTO Merchant_Profile (id, merchant_id, store_name, industry_cat, location_text, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, datetime('now'), datetime('now'))`,
+        [crypto.randomUUID(), merchant.id, shopName, industry, address || '']
+      );
+    }
+  }
+
+  // ── ② 先做视觉分析（如果有图片）─────────────────
+  let imageAnalysis = '';
+  if (images && images.length > 0) {
+    console.log('👁️ 开始分析图片...');
+    try {
+      imageAnalysis = await analyzeImages(images);
+    } catch (err: any) {
+      console.warn('⚠️ 图片分析失败，继续生成:', err.message);
+    }
+  }
+
+  // ── ③ 读取商家联系方式 ──────────────────────
+  let contactInfo: { phone?: string; wechat?: string; address?: string } | undefined;
+  try {
+    const profile = await db.queryOne(
+      'SELECT phone_number, wechat_id, location_text FROM Merchant_Profile WHERE merchant_id = ?',
+      [merchant.id]
+    );
+    if (profile && (profile.phone_number || profile.wechat_id || profile.location_text)) {
+      contactInfo = {
+        phone: profile.phone_number || undefined,
+        wechat: profile.wechat_id || undefined,
+        address: profile.location_text || undefined,
+      };
+      console.log('📞 读取到联系方式:', contactInfo);
+    }
+  } catch (err: any) {
+    console.warn('⚠️ 读取联系方式失败:', err.message);
+  }
+
+  // ── ④ 再生成文案 ─────────────────────────────
+  let aiContent = '';
+  try {
+    const { system, user } = buildGeneratePrompt({
+      shopName, industry, address,
+      features: features || '',
+      target: target || '',
+      types, style: style || 'friendly',
+      imageAnalysis,
+      contactInfo,
+    });
+
+    aiContent = await callAI([
+      { role: 'system', content: system },
+      { role: 'user',   content: user },
+    ]);
+  } catch (err: any) {
+    console.error('❌ AI 文案生成失败:', err.message);
+    ctx.status = 500;
+    ctx.body = { code: 500, message: `AI 生成失败: ${err.message}` };
+    return;
+  }
+
+  // ── ⑤ 更新商家信息 ───────────────────────────
+  {
     const profile = await db.queryOne('SELECT id FROM Merchant_Profile WHERE merchant_id = ?', [merchant.id]);
     if (profile) {
       await db.execute(

@@ -146,13 +146,8 @@ export async function register(phone: string, code: string): Promise<RegisterRes
     [merchantId, phone, nickname]
   );
 
-  // 6. 创建商户资料（Profile）
-  const profileId = uuidv4();
-  await execute(
-    `INSERT INTO Merchant_Profile (id, merchant_id, store_name, contact_name, phone_number)
-     VALUES (?, ?, ?, ?, ?)`,
-    [profileId, merchantId, nickname, nickname, phone]
-  );
+  // 6. 不自动创建 Merchant_Profile，让用户在入驻页手动填写
+  // 这样 is_profile_complete 才能正确判断入驻状态
 
   // 7. 生成 JWT token
   const { signToken } = require('./auth.service.js');
