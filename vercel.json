@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "name": "linli-ai-api",
   "builds": [
     {
       "src": "server/src/vercel.ts",
