@@ -15,6 +15,16 @@ const app = new Koa();
 app.use(cors({ origin: '*', credentials: true }));
 app.use(bodyParser({ jsonLimit: '10mb', formLimit: '10mb' }));
 
+// 数据库初始化中间件（serverless 环境必需）
+app.use(async (ctx, next) => {
+  // @ts-ignore
+  const db = require('./core/database');
+  if (!db.testConnection || !db.testConnection()) {
+    await db.initDatabase();
+  }
+  await next();
+});
+
 // 统一响应格式
 app.use(async (ctx, next) => {
   try {
