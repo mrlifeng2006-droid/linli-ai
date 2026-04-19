@@ -1,0 +1,98 @@
+<!-- pages/onboarding/onboarding.wxml -->
+<view class="container">
+  <!-- 顶部进度 -->
+  <view class="progress-bar">
+    <view class="progress-inner" style="width: 100%"></view>
+  </view>
+  <text class="progress-text">商家入驻 · 信息填写</text>
+
+  <!-- 店铺信息卡片 -->
+  <view class="section-title">🏪 店铺基本信息</view>
+  <view class="form-card">
+    <view class="form-item">
+      <text class="form-label required">店铺名称</text>
+      <input class="form-input" placeholder="例如：老王牛肉面" value="{{formData.store_name}}" bindinput="onFieldInput" data-field="store_name" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label required">行业类型</text>
+      <picker mode="selector" range="{{industryList}}" range-key="name" bindchange="onIndustryChange">
+        <view class="form-picker">
+          <text class="{{formData.industry_cat ? '' : 'placeholder'}}">
+            {{formData.industry_cat || '请选择行业类型'}}
+          </text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label required">详细地址</text>
+      <input class="form-input" placeholder="省市区街道门牌号" value="{{formData.location_text}}" bindinput="onFieldInput" data-field="location_text" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">店铺特色</text>
+      <textarea class="form-textarea" placeholder="描述店铺的核心竞争力，吸引客户的亮点..." value="{{formData.features}}" bindinput="onFieldInput" data-field="features" maxlength="500" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">目标客户</text>
+      <input class="form-input" placeholder="例如：周边上班族、社区居民" value="{{formData.target_customer}}" bindinput="onFieldInput" data-field="target_customer" />
+    </view>
+  </view>
+
+  <!-- 联系方式卡片 -->
+  <view class="section-title">📞 联系方式</view>
+  <view class="form-card">
+    <view class="form-item">
+      <text class="form-label required">联系人姓名</text>
+      <input class="form-input" placeholder="请输入联系人姓名" value="{{formData.contact_name}}" bindinput="onFieldInput" data-field="contact_name" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label required">联系电话</text>
+      <input class="form-input" type="number" maxlength="11" placeholder="手机号" value="{{formData.phone_number}}" bindinput="onFieldInput" data-field="phone_number" />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">微信号 <text class="optional">(选填)</text></text>
+      <input class="form-input" placeholder="用于客户咨询添加" value="{{formData.wechat_id}}" bindinput="onFieldInput" data-field="wechat_id" />
+    </view>
+  </view>
+
+  <!-- 文案风格 -->
+  <view class="section-title">✏️ 默认文案风格</view>
+  <view class="form-card style-card">
+    <view class="style-group">
+      <view class="style-item {{formData.tone_style === 'friendly' ? 'active' : ''}}" bindtap="onStyleSelect" data-style="friendly">
+        <text class="style-icon">😊</text>
+        <text class="style-name">亲切温暖</text>
+      </view>
+      <view class="style-item {{formData.tone_style === 'professional' ? 'active' : ''}}" bindtap="onStyleSelect" data-style="professional">
+        <text class="style-icon">💼</text>
+        <text class="style-name">专业商务</text>
+      </view>
+      <view class="style-item {{formData.tone_style === 'casual' ? 'active' : ''}}" bindtap="onStyleSelect" data-style="casual">
+        <text class="style-icon">😎</text>
+        <text class="style-name">轻松活泼</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 冷却期提示（已入驻且在冷却期内） -->
+  <view class="cooldown-card" wx:if="{{!can_edit}}">
+    <text class="cooldown-icon">⏰</text>
+    <text class="cooldown-text">距离下次修改还需等待 {{cooldownText}}</text>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-section">
+    <button class="submit-btn {{loading ? 'loading' : ''}} {{!can_edit ? 'disabled' : ''}}" bindtap="onSubmit" disabled="{{loading || !can_edit}}">
+      <text wx:if="{{loading}}">保存中...</text>
+      <text wx:elif="{{!can_edit}}">冷却期内，暂不可修改</text>
+      <text wx:else>保存入驻信息</text>
+    </button>
+    <text class="submit-tip">* 保存后可使用AI智能生成功能</text>
+  </view>
+</view>

@@ -9,8 +9,8 @@ import {
   updateContent,
   deleteContent,
   type ContentData,
-} from '../../modules/content/content.service.js';
-import { requireAuth } from '../../modules/user/auth.service.js';
+} from '../../modules/content/content.service';
+import { requireAuth } from '../../modules/user/auth.service';
 
 const router = new Router({ prefix: '/content' });
 

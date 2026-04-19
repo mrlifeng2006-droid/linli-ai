@@ -36,3 +36,4 @@ temp/
 cos_temp/
 *.db-shm
 *.db-wal
+.vercel

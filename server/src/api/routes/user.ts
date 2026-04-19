@@ -2,9 +2,9 @@
  * 用户路由 - 登录注册接口
  */
 import Router from 'koa-router';
-import { sendCode, register, login, wechatLogin } from '../../modules/user/user.service.js';
-import { getCurrentMerchantId, requireAuth } from '../../modules/user/auth.service.js';
-import { queryOne } from '../../core/database/index.js';
+import { sendCode, register, login, wechatLogin } from '../../modules/user/user.service';
+import { getCurrentMerchantId, requireAuth } from '../../modules/user/auth.service';
+import { queryOne } from '../../core/database/index';
 
 const router = new Router({ prefix: '/user' });
 
@@ -97,7 +97,7 @@ router.post('/wechat-login', async (ctx) => {
   }
 
   // 从配置读取微信参数
-  const { config } = await import('../../core/config/index.js');
+  const { config } = await import('../../core/config/index');
   const appid = config.wechat.appid;
   const secret = config.wechat.secret;
 
@@ -187,7 +187,7 @@ router.put('/profile', requireAuth(), async (ctx) => {
 
   if (merchantUpdates.length > 0) {
     merchantValues.push(merchantId);
-    const { execute } = await import('../../core/database/index.js');
+    const { execute } = await import('../../core/database/index');
     execute(`UPDATE Merchant SET ${merchantUpdates.join(', ')}, updated_at = datetime('now') WHERE id = ?`, merchantValues);
   }
 
@@ -218,7 +218,7 @@ router.put('/profile', requireAuth(), async (ctx) => {
 
   if (profileUpdates.length > 0) {
     profileValues.push(merchantId);
-    const { execute } = await import('../../core/database/index.js');
+    const { execute } = await import('../../core/database/index');
     execute(`UPDATE Merchant_Profile SET ${profileUpdates.join(', ')}, updated_at = datetime('now') WHERE merchant_id = ?`, profileValues);
   }
 

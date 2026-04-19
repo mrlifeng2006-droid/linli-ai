@@ -1,7 +1,7 @@
-/**
+﻿/**
  * 内容服务 - 内容分发核心业务逻辑
  */
-import { query, queryOne, execute } from '../../core/database/index.js';
+import { query, queryOne, execute } from '../../core/database/index';
 import { v4 as uuidv4 } from 'uuid';
 
 // ==================== 类型定义 ====================

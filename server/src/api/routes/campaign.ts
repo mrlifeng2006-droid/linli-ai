@@ -11,8 +11,8 @@ import {
   listUserVouchers, getVoucherDetail, verifyVoucher,
   listCampaignsForUser, getCampaignForUser,
   getParticipationDetail, logShare,
-} from '../../modules/campaign/campaign.service.js';
-import { requireAuth } from '../../modules/user/auth.service.js';
+} from '../../modules/campaign/campaign.service';
+import { requireAuth } from '../../modules/user/auth.service';
 
 const router = new Router({ prefix: '/campaign' });
 

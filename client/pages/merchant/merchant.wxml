@@ -24,7 +24,7 @@
         <picker mode="selector" range="{{industryList}}" value="{{industryIndex}}"
           bindchange="onIndustryChange">
           <view class="form-picker">
-            <text>{{industryList[industryIndex] || '请选择行业'}}</text>
+            <text>{{industryName}}</text>
             <text class="picker-arrow">›</text>
           </view>
         </picker>
@@ -85,28 +85,28 @@
 
     <!-- 商家信息卡片 -->
     <view class="merchant-card">
-      <view class="merchant-name">{{merchantInfo.store_name || merchantInfo.nickname || '我的商家'}}</view>
+      <view class="merchant-name">{{merchantInfo.store_name}}</view>
       <view class="merchant-meta">
-        <text class="meta-tag">{{merchantInfo.industry_cat || '餐饮美食'}}</text>
+        <text class="meta-tag">{{merchantInfo.industry_cat}}</text>
         <text class="meta-tag" wx:if="{{merchantInfo.city}}">{{merchantInfo.city}}</text>
         <text class="meta-badge" wx:if="{{merchantInfo.auth_status === 'approved'}}">已认证</text>
         <text class="meta-badge pending" wx:else>待认证</text>
       </view>
       <view class="merchant-stats-row">
         <view class="mini-stat">
-          <text class="mini-num">{{stats && stats.total_views || 0}}</text>
+          <text class="mini-num">{{stats.total_views}}</text>
           <text class="mini-label">曝光</text>
         </view>
         <view class="mini-stat">
-          <text class="mini-num">{{stats && stats.total_clicks || 0}}</text>
+          <text class="mini-num">{{stats.total_clicks}}</text>
           <text class="mini-label">点击</text>
         </view>
         <view class="mini-stat">
-          <text class="mini-num">{{stats && stats.total_shares || 0}}</text>
+          <text class="mini-num">{{stats.total_shares}}</text>
           <text class="mini-label">分享</text>
         </view>
         <view class="mini-stat">
-          <text class="mini-num">{{stats && stats.total_content || 0}}</text>
+          <text class="mini-num">{{stats.total_content}}</text>
           <text class="mini-label">内容</text>
         </view>
       </view>
@@ -117,16 +117,16 @@
       <view class="section-title">📍 GEO曝光报告</view>
       <view class="geo-grid">
         <view class="geo-card">
-          <text class="geo-num">{{geoReport.geo覆盖率 || 0}}%</text>
+          <text class="geo-num">{{geoReport.geoCoverage}}</text><text>%</text>
           <text class="geo-label">覆盖率</text>
         </view>
         <view class="geo-card">
-          <text class="geo-num">{{geoReport.地标数量 || 0}}</text>
+          <text class="geo-num">{{geoReport.landmarkCount}}</text>
           <text class="geo-label">周边地标</text>
         </view>
         <view class="geo-card">
-          <text class="geo-num">{{geoReport.预估曝光 || 0}}</text>
-          <text class="geo-label">预估曝光</text>
+          <text class="geo-num">{{geoReport.estExposure}}</text>
+          <text class="geo-label">estExposure</text>
         </view>
       </view>
       <button class="btn-small" bindtap="onRefreshGeo">🔄 刷新GEO</button>
@@ -147,19 +147,19 @@
       <view class="info-list">
         <view class="info-row">
           <text class="info-label">店铺名称</text>
-          <text class="info-value">{{merchantInfo.store_name || '-'}}</text>
+          <text class="info-value">{{merchantInfo.store_name}}</text>
         </view>
         <view class="info-row">
           <text class="info-label">行业分类</text>
-          <text class="info-value">{{merchantInfo.industry_cat || '-'}}</text>
+          <text class="info-value">{{merchantInfo.industry_cat}}</text>
         </view>
         <view class="info-row">
           <text class="info-label">所在城市</text>
-          <text class="info-value">{{merchantInfo.city || '-'}}</text>
+          <text class="info-value">{{merchantInfo.city}}</text>
         </view>
         <view class="info-row">
           <text class="info-label">详细地址</text>
-          <text class="info-value">{{merchantInfo.location_text || '-'}}</text>
+          <text class="info-value">{{merchantInfo.location_text}}</text>
         </view>
         <view class="info-row">
           <text class="info-label">认证状态</text>
@@ -175,23 +175,23 @@
       <view class="stats-card" wx:if="{{stats}}">
         <view class="stat-row">
           <text class="stat-label">累计曝光</text>
-          <text class="stat-value primary">{{stats.total_views || 0}}</text>
+          <text class="stat-value primary">{{stats.total_views}}</text>
         </view>
         <view class="stat-row">
           <text class="stat-label">累计点击</text>
-          <text class="stat-value">{{stats.total_clicks || 0}}</text>
+          <text class="stat-value">{{stats.total_clicks}}</text>
         </view>
         <view class="stat-row">
           <text class="stat-label">分享次数</text>
-          <text class="stat-value">{{stats.total_shares || 0}}</text>
+          <text class="stat-value">{{stats.total_shares}}</text>
         </view>
         <view class="stat-row">
           <text class="stat-label">生成内容</text>
-          <text class="stat-value">{{stats.total_content || 0}}</text>
+          <text class="stat-value">{{stats.total_content}}</text>
         </view>
         <view class="stat-row">
           <text class="stat-label">转化率</text>
-          <text class="stat-value green">{{stats.conversion_rate || '0%'}}</text>
+          <text class="stat-value green">{{stats.conversion_rate}}</text>
         </view>
       </view>
       <view wx:else class="empty-state">

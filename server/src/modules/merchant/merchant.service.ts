@@ -1,10 +1,10 @@
-/**
+﻿/**
  * 商家服务 - 商家入驻、商家画像、经营看板、GEO报告
  * 参照：邻里AI_V17.0_全栈开发需求书_最终封档版
  * @ts-nocheck
  */
 import { v4 as uuidv4 } from 'uuid';
-import { query, queryOne, execute } from '../../core/database/index.js';
+import { query, queryOne, execute } from '../../core/database/index';
 
 // ===================== 商家入驻 =====================
 

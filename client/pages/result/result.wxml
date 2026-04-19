@@ -6,6 +6,24 @@
     <text class="subtitle">{{shopName}} · 营销文案</text>
   </view>
 
+  <!-- AI看图分析结果 -->
+  <view class="ai-analysis-section" wx:if="{{imageAnalysis}}">
+    <view class="section-title">👁️ AI看图分析结果</view>
+    <view class="ai-analysis-box">{{imageAnalysis}}</view>
+  </view>
+
+  <!-- 商家图片 -->
+  <view class="image-section" wx:if="{{images.length > 0}}">
+    <view class="section-title">🖼️ 店铺图片（{{images.length}}张）</view>
+    <view class="image-grid">
+      <image class="result-img" wx:for="{{images}}" wx:key="index" src="{{item}}" mode="aspectFill" bindtap="previewImage" data-url="{{item}}" />
+    </view>
+  </view>
+  <!-- 调试：没图片时显示提示 -->
+  <view class="debug-hint" wx:if="{{images.length === 0}}" style="background:#fff3cd;padding:20rpx;border-radius:12rpx;margin-bottom:20rpx;font-size:24rpx;color:#856404;">
+    ⚠️ 未检测到图片数据（images={{images.length}}）
+  </view>
+
   <!-- 文案列表 -->
   <view class="result-list">
     <block wx:for="{{results}}" wx:key="index">
@@ -23,6 +41,7 @@
   <!-- 底部按钮 -->
   <view class="bottom-bar">
     <button class="btn-retry" bindtap="onBack">继续生成</button>
-    <button class="btn-share" open-type="share">分享给好友</button>
+    <button class="btn-share" bindtap="goToDistribution">📤 一键分发</button>
+    <button class="btn-share" open-type="share">分享</button>
   </view>
 </view>

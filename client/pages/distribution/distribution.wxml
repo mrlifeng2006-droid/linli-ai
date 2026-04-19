@@ -1,2 +1,129 @@
-<!--pages/distribution/distribution.wxml-->
-<text>pages/distribution/distribution.wxml</text>
+<!-- pages/distribution/distribution.wxml -->
+<view class="container">
+
+  <!-- 顶部标题 -->
+  <view class="header">
+    <text class="header-title">📤 内容分发</text>
+    <text class="header-sub" wx:if="{{shopName}}">{{shopName}} · 营销内容分发</text>
+  </view>
+
+  <!-- Tab切换 -->
+  <view class="tab-bar">
+    <block wx:for="{{tabs}}" wx:key="key">
+      <view class="tab-item {{activeTab === item.key ? 'active' : ''}}"
+        bindtap="onTabChange" data-tab="{{item.key}}">
+        <text>{{item.label}}</text>
+      </view>
+    </block>
+  </view>
+
+  <!-- ===================== 发布内容Tab ===================== -->
+  <view class="tab-content" wx:if="{{activeTab === 'publish'}}">
+
+    <!-- 内容预览 -->
+    <view class="content-preview" wx:if="{{results.length > 0}}">
+      <view class="preview-title">📋 当前内容</view>
+      <block wx:for="{{results}}" wx:key="index">
+        <view class="preview-item">
+          <view class="preview-type">{{item.typeName}}</view>
+          <text class="preview-text">{{item.displayContent}}</text>
+          <text class="preview-tags" wx:if="{{item.hashtags}}">{{item.hashtags}}</text>
+        </view>
+      </block>
+    </view>
+
+    <view class="empty-hint" wx:if="{{results.length === 0}}">
+      <text>暂无内容，请先生成营销文案</text>
+      <button class="btn-goto-generate" bindtap="goToGenerate">去生成</button>
+    </view>
+
+    <!-- 平台选择 -->
+    <view class="platform-section">
+      <view class="section-title">选择分发平台</view>
+      <view class="platform-grid">
+        <block wx:for="{{platforms}}" wx:key="key">
+          <view
+            class="platform-card {{selectedPlatform === item.key ? 'selected' : ''}} {{copyStatus === item.key ? 'copied' : ''}}"
+            style="border-color: {{selectedPlatform === item.key ? item.color : '#eee'}}"
+            bindtap="onSelectPlatform"
+            data-platform="{{item.key}}">
+            <text class="platform-icon">{{item.icon}}</text>
+            <text class="platform-name">{{item.name}}</text>
+            <text class="platform-tip">{{item.tip}}</text>
+            <view class="platform-status" wx:if="{{copyStatus === item.key}}">✓ 已复制</view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 选中平台操作 -->
+    <view class="action-area" wx:if="{{selectedPlatform && results.length > 0}}">
+      <view class="selected-platform-hint">
+        <text>📋 已选: </text>
+        <text class="hint-platform">{{selectedPlatformName}}</text>
+        <text decode="{{true}}"> &nbsp;·&nbsp; </text>
+        <text>字数: {{formatContentLength || '—'}}</text>
+      </view>
+      <button
+        class="btn-publish {{copyStatus === selectedPlatform ? 'btn-copied' : ''}}"
+        bindtap="onCopyAndPublish"
+        data-platform="{{selectedPlatform}}">
+        {{copyStatus === selectedPlatform ? '✓ 已复制，前往粘贴' : '📋 复制文案'}}
+      </button>
+    </view>
+
+    <!-- 分发说明 -->
+    <view class="tips-card">
+      <view class="tips-title">💡 分发说明</view>
+      <view class="tips-item">1. 点击平台卡片可一键复制格式化文案</view>
+      <view class="tips-item">2. 粘贴到对应平台即可发布</view>
+      <view class="tips-item">3. 建议添加店铺位置增加本地曝光</view>
+      <view class="tips-item">4. 分发记录会自动保存到历史</view>
+    </view>
+
+  </view>
+
+  <!-- ===================== 分发记录Tab ===================== -->
+  <view class="tab-content" wx:if="{{activeTab === 'history'}}">
+
+    <view class="history-stats" wx:if="{{history.length > 0}}">
+      <text class="stats-text">共 {{history.length}} 条分发记录</text>
+    </view>
+
+    <view class="history-list" wx:if="{{history.length > 0}}">
+      <block wx:for="{{history}}" wx:key="id">
+        <view class="history-card">
+          <view class="history-header">
+            <view class="history-platform">
+              <text class="platform-badge"
+                style="background: {{platformMap[item.platform] ? platformMap[item.platform].color : '#999'}}">
+                {{platformMap[item.platform] ? platformMap[item.platform].icon : '📤'}}
+                {{platformMap[item.platform] ? platformMap[item.platform].name : item.platform}}
+              </text>
+            </view>
+            <text class="history-time">{{item.publishAt}}</text>
+          </view>
+          <text class="history-content">{{item.contentText}}</text>
+          <view class="history-footer">
+            <view class="history-meta">
+              <text wx:if="{{item.views}}">👁️ {{item.views}}</text>
+              <text wx:if="{{item.clicks}}">👆 {{item.clicks}}</text>
+            </view>
+            <text class="history-copy-btn" bindtap="onCopyHistory" data-item="{{item}}">再次复制</text>
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <view class="empty-state" wx:if="{{history.length === 0 && !historyLoading}}">
+      <text>📭 暂无分发记录</text>
+      <text class="empty-sub">发布内容后会自动保存到这里</text>
+    </view>
+
+    <view class="loading-more" wx:if="{{historyLoading}}">
+      <text>加载中...</text>
+    </view>
+
+  </view>
+
+</view>

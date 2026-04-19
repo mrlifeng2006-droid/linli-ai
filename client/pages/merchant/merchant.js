@@ -32,6 +32,7 @@ Page({
       '家居建材', '汽车服务', '其他'
     ],
     industryIndex: 0,
+    industryName: '请选择行业',
 
     // tab
     activeTab: 'info',
@@ -53,13 +54,42 @@ Page({
     }
   },
 
+  // ========== 初始化带默认值的安全数据 ==========
+  getSafeStats(stats) {
+    return {
+      total_views: stats ? (stats.total_views || 0) : 0,
+      total_clicks: stats ? (stats.total_clicks || 0) : 0,
+      total_shares: stats ? (stats.total_shares || 0) : 0,
+      total_content: stats ? (stats.total_content || 0) : 0,
+      conversion_rate: stats ? (stats.conversion_rate || '0%') : '0%',
+    };
+  },
+
+  getSafeGeoReport(report) {
+    return {
+      geoCoverage: report ? (report.geoCoverage || 0) : 0,
+      landmarkCount: report ? (report.landmarkCount || 0) : 0,
+      estExposure: report ? (report.estExposure || 0) : 0,
+    };
+  },
+
+  getSafeMerchantInfo(info) {
+    return {
+      store_name: info ? (info.store_name || '我的商家') : '我的商家',
+      industry_cat: info ? (info.industry_cat || '餐饮美食') : '餐饮美食',
+      city: info ? (info.city || '-') : '-',
+      location_text: info ? (info.location_text || '-') : '-',
+      nickname: info ? (info.nickname || '我的商家') : '我的商家',
+    };
+  },
+
   // 检查商家状态
   async checkMerchantStatus() {
     this.setData({ isLoading: true });
     try {
       const res = await api.request('/merchant/info', 'GET', null, true);
       if (res.code === 0 && res.data) {
-        this.setData({ isMerchant: true, merchantInfo: res.data, isLoading: false });
+        this.setData({ isMerchant: true, merchantInfo: this.getSafeMerchantInfo(res.data), isLoading: false });
         this.loadMerchantData();
       } else {
         this.setData({ isMerchant: false, isLoading: false });
@@ -78,9 +108,9 @@ Page({
     ];
     const [infoRes, statsRes, geoRes] = await Promise.all(promises);
     this.setData({
-      merchantInfo: infoRes && infoRes.code === 0 ? infoRes.data : this.data.merchantInfo,
-      stats: statsRes && statsRes.code === 0 ? statsRes.data : null,
-      geoReport: geoRes && geoRes.code === 0 ? geoRes.data : null,
+      merchantInfo: infoRes && infoRes.code === 0 ? this.getSafeMerchantInfo(infoRes.data) : this.getSafeMerchantInfo(null),
+      stats: statsRes && statsRes.code === 0 ? this.getSafeStats(statsRes.data) : this.getSafeStats(null),
+      geoReport: geoRes && geoRes.code === 0 ? this.getSafeGeoReport(geoRes.data) : this.getSafeGeoReport(null),
     });
   },
 
@@ -98,6 +128,7 @@ Page({
     const idx = parseInt(e.detail.value);
     this.setData({
       industryIndex: idx,
+      industryName: this.data.industryList[idx] || '请选择行业',
       'formData.industry_cat': this.data.industryList[idx],
     });
   },

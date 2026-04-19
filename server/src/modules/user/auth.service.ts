@@ -1,9 +1,9 @@
-/**
+﻿/**
  * 鉴权服务 - JWT Token 生成与验证
  */
 import jwt from 'jsonwebtoken';
-import { config } from '../../core/config/index.js';
-import { queryOne } from '../../core/database/index.js';
+import { config } from '../../core/config/index';
+import { queryOne } from '../../core/database/index';
 
 export interface TokenPayload {
   merchantId: string;

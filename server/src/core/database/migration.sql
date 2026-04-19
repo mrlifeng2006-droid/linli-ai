@@ -46,3 +46,26 @@ CREATE TABLE IF NOT EXISTS Wechat_Bind (
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_wechat_openid ON Wechat_Bind(openid, platform);
 CREATE INDEX IF NOT EXISTS idx_wechat_merchant ON Wechat_Bind(merchant_id);
+
+-- ============================================================
+-- 内容分发记录表（V17.0 新增）
+-- ============================================================
+CREATE TABLE IF NOT EXISTS Distribution_History (
+  id                  TEXT PRIMARY KEY,
+  merchant_id         TEXT NOT NULL,
+  content_id          TEXT,
+  platform            TEXT NOT NULL,          -- 'friend_circle'|'wechat_friend'|'douyin'|'xiaohongshu'|'weibo'|'short_video'
+  content_text        TEXT NOT NULL,
+  hashtags            TEXT,                    -- JSON数组 ["#同城","#餐饮"]
+  geo_tag             TEXT,                    -- 📍地址
+  city_tag            TEXT,                    -- #城市同城标签
+  status              TEXT DEFAULT 'published', -- published | failed | draft
+  publish_at          TEXT DEFAULT (datetime('now')),
+  views               INTEGER DEFAULT 0,
+  clicks              INTEGER DEFAULT 0,
+  created_at          TEXT DEFAULT (datetime('now')),
+  FOREIGN KEY (merchant_id) REFERENCES Merchant(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_dist_merchant ON Distribution_History(merchant_id, publish_at DESC);
+CREATE INDEX IF NOT EXISTS idx_dist_platform ON Distribution_History(platform, publish_at DESC);

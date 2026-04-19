@@ -1,11 +1,11 @@
-/**
+﻿/**
  * 营销服务 - 砍价/拼团/秒杀活动管理
  * 参照：邻里AI_V17.0_全栈开发需求书_最终封档版
  * @ts-nocheck
  */
 import { v4 as uuidv4 } from 'uuid';
 import crypto from 'crypto';
-import { query, queryOne, execute } from '../../core/database/index.js';
+import { query, queryOne, execute } from '../../core/database/index';
 
 // ===================== 工具函数 =====================
 

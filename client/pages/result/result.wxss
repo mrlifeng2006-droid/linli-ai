@@ -104,3 +104,52 @@
   border-radius: 44rpx;
   font-size: 30rpx;
 }
+
+/* AI看图分析 */
+.ai-analysis-section {
+  background: linear-gradient(135deg, #e8f4ff 0%, #f0f7ff 100%);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  border: 2rpx solid #b3d7ff;
+}
+.ai-analysis-section .section-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #1a73e8;
+  margin-bottom: 12rpx;
+}
+.ai-analysis-box {
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-all;
+  background: #fff;
+  padding: 20rpx;
+  border-radius: 12rpx;
+}
+
+/* 图片展示 */
+.image-section {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+}
+.section-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+.result-img {
+  width: 210rpx;
+  height: 210rpx;
+  border-radius: 12rpx;
+}

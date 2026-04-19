@@ -15,6 +15,7 @@ import videoRouter from './video';
 import distributionRouter from './distribution';
 import adminRouter from './admin';
 import healthRouter from './health';
+import uploadRouter from './upload';
 
 const router = new Router();
 
@@ -47,5 +48,6 @@ router.use(API, geoRouter.routes(), geoRouter.allowedMethods());
 router.use(API, videoRouter.routes(), videoRouter.allowedMethods());
 router.use(API, distributionRouter.routes(), distributionRouter.allowedMethods());
 router.use(API, adminRouter.routes(), adminRouter.allowedMethods());
+router.use(API, uploadRouter.routes(), uploadRouter.allowedMethods());
 
 export default router;

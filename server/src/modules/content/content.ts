@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 内容路由 - 内容分发接口
  */
 import Router from 'koa-router';
@@ -9,9 +9,9 @@ import {
   updateContent,
   deleteContent,
   type ContentData,
-} from './content.service.js';
-import { getCurrentMerchantId, requireAuth } from '../user/auth.service.js';
-import { queryOne } from '../../core/database/index.js';
+} from './content.service';
+import { getCurrentMerchantId, requireAuth } from '../user/auth.service';
+import { queryOne } from '../../core/database/index';
 
 const router = new Router({ prefix: '/content' });
 

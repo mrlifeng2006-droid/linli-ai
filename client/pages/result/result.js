@@ -3,15 +3,20 @@ Page({
   data: {
     shopName: '',
     results: [],
+    images: [],
   },
 
-  onLoad(options) {
-    // 解析从 generate.js 传来的数据
+  onLoad(_options) {
+    // 从缓存读取生成结果
     try {
-      const raw = decodeURIComponent(options.data || '{}');
-      const parsed = JSON.parse(raw);
-      console.log('result page data:', parsed);
-      this.processResult(parsed);
+      const data = wx.getStorageSync('generateResult');
+      if (data) {
+        console.log('result page data:', data);
+        this.processResult(data);
+        wx.removeStorageSync('generateResult'); // 读取后清理
+      } else {
+        wx.showToast({ title: '数据获取失败', icon: 'none' });
+      }
     } catch (err) {
       console.error('解析结果失败:', err);
       wx.showToast({ title: '数据解析失败', icon: 'none' });
@@ -44,6 +49,8 @@ Page({
     this.setData({
       shopName: data.shopName || '',
       results,
+      images: data.images || [],
+      imageAnalysis: data.imageAnalysis || '',
     });
   },
 
@@ -60,8 +67,27 @@ Page({
     });
   },
 
+  previewImage(e) {
+    const url = e.currentTarget.dataset.url;
+    wx.previewImage({
+      current: url,
+      urls: this.data.images,
+    });
+  },
+
   onBack() {
     wx.navigateBack();
+  },
+
+  // 去分发页
+  goToDistribution() {
+    const data = {
+      shopName: this.data.shopName,
+      results: this.data.results,
+      images: this.data.images,
+    };
+    wx.setStorageSync('distributionData', data);
+    wx.navigateTo({ url: '/pages/distribution/distribution' });
   },
 
   onShareAppMessage() {

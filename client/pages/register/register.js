@@ -57,11 +57,11 @@ Page({
       const res = await api.auth.register(phone, code);
       if (res.code === 0) {
         wx.setStorageSync('token', res.data.token);
-        wx.setStorageSync('userInfo', res.data.user);
+        wx.setStorageSync('userInfo', res.data.profile);
         wx.showToast({ title: '注册成功', icon: 'success' });
-        // 注册成功后跳转首页
+        // 注册成功后跳转入驻页（强制填写店铺信息）
         setTimeout(() => {
-          wx.switchTab({ url: '/pages/home/home' });
+          wx.navigateTo({ url: '/pages/onboarding/onboarding' });
         }, 1000);
       }
     } catch (e) {

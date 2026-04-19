@@ -3,6 +3,7 @@
     "pages/home/home",
     "pages/login/login",
     "pages/register/register",
+    "pages/onboarding/onboarding",
     "pages/generate/generate",
     "pages/result/result",
     "pages/merchant/merchant",

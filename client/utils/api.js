@@ -1,5 +1,9 @@
 // utils/api.js —— 邻里AI 统一API请求工具（v2 路由已对齐后端）
-const API_BASE = 'https://server-7im6s0ktm-mrlifeng2006-droids-projects.vercel.app/api/v1';
+// 自动检测环境：模拟器用localhost，真机用局域网IP
+const isDevTools = wx.getSystemInfoSync().platform === 'devtools';
+const API_BASE = isDevTools 
+  ? 'http://localhost:3000/api/v1'
+  : 'http://192.168.10.220:3000/api/v1';
 
 /**
  * 统一请求封装
@@ -81,13 +85,13 @@ const merchant = {
   registerEnterprise(data) {
     return request('/merchant/register/business', 'POST', data, true);
   },
-  // 获取商家资料
+  // 获取商家店铺信息（入驻信息）
   getProfile() {
-    return request('/merchant/info', 'GET', null, true);
+    return request('/merchant/profile', 'GET', null, true);
   },
-  // 更新商家画像
+  // 更新商家店铺信息
   updateProfile(data) {
-    return request('/merchant/info', 'PUT', data, true);
+    return request('/merchant/profile', 'POST', data, true);
   },
   // 刷新地标
   refreshLandmarks() {
