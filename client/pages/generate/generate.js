@@ -9,7 +9,7 @@ Page({
     address: '',
     features: '',
     target: '',
-    checkedTypes: ['social', 'shortVideo'],
+    checkedTypes: {social: true, shortVideo: true, poster: false, groupMsg: false},
     selectedStyle: 'friendly',
     generating: false,
 
@@ -68,13 +68,8 @@ Page({
 
   toggleType(e) {
     const type = e.currentTarget.dataset.type;
-    const checked = [...this.data.checkedTypes];
-    const idx = checked.indexOf(type);
-    if (idx > -1) {
-      checked.splice(idx, 1);
-    } else {
-      checked.push(type);
-    }
+    const checked = {...this.data.checkedTypes};
+    checked[type] = !checked[type];
     this.setData({ checkedTypes: checked });
   },
 
@@ -92,7 +87,8 @@ Page({
       wx.showToast({ title: '请填写店铺特色', icon: 'none' });
       return;
     }
-    if (this.data.checkedTypes.length === 0) {
+    const selectedTypes = Object.keys(this.data.checkedTypes).filter(k => this.data.checkedTypes[k]);
+    if (selectedTypes.length === 0) {
       wx.showToast({ title: '请至少选择一种内容类型', icon: 'none' });
       return;
     }
@@ -100,8 +96,8 @@ Page({
     this.setData({ generating: true });
     try {
       // 前端类型名 → 后端类型名
-      const typeMap = { social: 'friend_circle', shortVideo: 'short_video', video: 'video', image: 'image' };
-      const types = this.data.checkedTypes.map(t => typeMap[t] || t);
+      const typeMap = { social: 'friend_circle', shortVideo: 'short_video', poster: 'poster', groupMsg: 'group_msg' };
+      const types = selectedTypes.map(t => typeMap[t] || t);
 
       const res = await api.ai.generate({
         shopName: this.data.shopName,
