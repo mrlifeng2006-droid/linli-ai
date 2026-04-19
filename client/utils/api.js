@@ -1,5 +1,5 @@
 // utils/api.js —— 邻里AI 统一API请求工具（v2 路由已对齐后端）
-const API_BASE = 'http://localhost:3000/api/v1';
+const API_BASE = 'https://linli-ai-api.vercel.app/api/v1';
 
 /**
  * 统一请求封装
@@ -223,4 +223,22 @@ module.exports = {
   ai,
   content,
   campaign,
+  distribution: {
+    // 获取平台列表
+    getPlatforms() {
+      return request('/distribution/platforms', 'GET');
+    },
+    // 发布内容
+    publish(data) {
+      return request('/distribution/publish', 'POST', data, true);
+    },
+    // 分发历史
+    history(page = 1, pageSize = 20) {
+      return request(`/distribution/history?page=${page}&pageSize=${pageSize}`, 'GET', null, true);
+    },
+    // 平台统计
+    stats() {
+      return request('/distribution/stats', 'GET', null, true);
+    },
+  },
 };
