@@ -1,5 +1,5 @@
 // utils/api.js —— 邻里AI 统一API请求工具（v2 路由已对齐后端）
-const API_BASE = 'https://linli-ai-api.vercel.app/api/v1';
+const API_BASE = 'https://server-7im6s0ktm-mrlifeng2006-droids-projects.vercel.app/api/v1';
 
 /**
  * 统一请求封装
